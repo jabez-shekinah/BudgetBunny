@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BudgetTracker</title>
     <link rel="icon" href="images/icon.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,1171 +15,1791 @@
 </head>
 <body>
     <div class="min-h-screen flex flex-col">
-        <!-- Header -->
-        <header class="gradient-bg text-white p-6 shadow-lg">
-            <div class="container mx-auto flex justify-between items-center">
-                <h1 class="text-2xl md:text-3xl font-bold">Budget<span class="text-purple-200">Tracker</span></h1>
-                <div class="flex items-center space-x-4">
-                    <button id="theme-toggle" class="p-2 rounded-full bg-white/20 hover:bg-white/30 transition">
-                        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                        </svg>
-                        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                    </button>
+      <!-- Header -->
+      <header class="gradient-bg text-white p-6 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+          <h1 class="text-2xl md:text-3xl font-bold">
+            Budget<span class="text-purple-200">Tracker</span>
+          </h1>
+          <div class="flex items-center space-x-4">
+            <button
+              id="theme-toggle"
+              class="p-2 rounded-full bg-white/20 hover:bg-white/30 transition"
+            >
+              <svg
+                id="moon-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                />
+              </svg>
+              <svg
+                id="sun-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 hidden"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                />
+              </svg>
+            </button>
+            <div class="relative">
+              <div
+                id="current-date"
+                class="flex items-center space-x-1 bg-white/20 hover:bg-white/30 rounded-full py-1 px-3 transition"
+              >
+                <span>Loading date...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-grow container mx-auto p-4 md:p-6">
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="card bg-white rounded-2xl p-6 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-gray-500 font-medium">Total Budget</h3>
+              <div class="p-2 rounded-lg bg-indigo-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-indigo-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <p
+                    id="budget-amount"
+                    class="text-2xl font-bold editable-field px-2 py-1"
+                  >
+                    ₱2,500.00
+                  </p>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 text-indigo-600 cursor-pointer"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414
+                                        a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </div>
+                <p class="text-sm text-green-500 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                    />
+                  </svg>
+                  <span id="budget-change">+5% from last month</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card bg-white rounded-2xl p-6 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-gray-500 font-medium">Total Expenses</h3>
+              <div class="p-2 rounded-lg bg-red-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-red-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <div>
+                <p id="expenses-amount" class="text-2xl font-bold">₱0.00</p>
+                <p class="text-sm text-red-500 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
+                    />
+                  </svg>
+                  <span id="expenses-change">0% from last month</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card bg-white rounded-2xl p-6 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-gray-500 font-medium">Remaining</h3>
+              <div class="p-2 rounded-lg bg-green-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-green-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <div>
+                <p id="remaining-amount" class="text-2xl font-bold">
+                  ₱2,500.00
+                </p>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                  <div
+                    id="remaining-progress"
+                    class="bg-green-500 h-2.5 rounded-full"
+                    style="width: 100%"
+                  ></div>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">
+                  <span id="remaining-percentage">100</span>% of budget
+                  remaining
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card bg-white rounded-2xl p-6 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-gray-500 font-medium">Savings Goal</h3>
+              <div class="p-2 rounded-lg bg-purple-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-purple-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <p
+                    id="savings-goal"
+                    class="text-2xl font-bold editable-field px-2 py-1"
+                  >
+                    ₱500.00
+                  </p>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 text-indigo-600 cursor-pointer"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414
+                                        a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                  <div
+                    id="savings-progress"
+                    class="bg-purple-600 h-2.5 rounded-full"
+                    style="width: 0%"
+                  ></div>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">
+                  <span id="savings-percentage">0</span>% of monthly goal
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Chart Section -->
+          <div class="lg:col-span-2">
+            <div class="bg-white rounded-2xl p-6 shadow-md mb-6">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-semibold">Expense Overview</h2>
+                <div class="flex space-x-2">
+                  <button
+                    class="time-period-btn px-3 py-1 text-sm rounded-md bg-indigo-100 text-indigo-600 font-medium"
+                    data-period="week"
+                  >
+                    Week
+                  </button>
+                  <button
+                    class="time-period-btn px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600 font-medium"
+                    data-period="month"
+                  >
+                    Month
+                  </button>
+                  <button
+                    class="time-period-btn px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600 font-medium"
+                    data-period="year"
+                  >
+                    Year
+                  </button>
+                </div>
+              </div>
+              <div class="h-64">
+                <canvas id="expenseChart"></canvas>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-md">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-semibold">Recent Transactions</h2>
+                <button
+                  id="view-all-transactions"
+                  class="text-indigo-600 text-sm font-medium flex items-center"
+                >
+                  View All
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 ml-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div id="transactions-container" class="space-y-4">
+                <div class="flex items-center justify-center p-8 text-gray-500">
+                  <p>No transactions yet. Add your first expense!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="space-y-6">
+            <!-- Add Expense Form -->
+            <div class="bg-white rounded-2xl p-6 shadow-md">
+              <h2 class="text-lg font-semibold mb-4">Add New Expense</h2>
+              <form id="expense-form">
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Description</label
+                    >
+                    <input
+                      type="text"
+                      id="expense-description"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                      placeholder="What did you spend on?"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Amount</label
+                    >
                     <div class="relative">
-                        <div id="current-date" class="flex items-center space-x-1 bg-white/20 hover:bg-white/30 rounded-full py-1 px-3 transition">
-                            <span>Loading date...</span>
-                        </div>
+                      <div
+                        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                      >
+                        <span class="text-gray-500">₱</span>
+                      </div>
+                      <input
+                        type="number"
+                        id="expense-amount"
+                        class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                        placeholder="0.00"
+                        step="0.01"
+                        min="0.01"
+                        required
+                      />
                     </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Category</label
+                    >
+                    <select
+                      id="expense-category"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                      required
+                    >
+                      <option value="">Select a category</option>
+                      <option value="food">Food & Dining</option>
+                      <option value="transportation">Transportation</option>
+                      <option value="entertainment">Entertainment</option>
+                      <option value="utilities">Utilities</option>
+                      <option value="shopping">Shopping</option>
+                      <option value="health">Health</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Date</label
+                    >
+                    <input
+                      type="date"
+                      id="expense-date"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                      required
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    class="w-full btn-gradient text-white py-2 px-4 rounded-lg font-medium shadow-md"
+                  >
+                    Add Expense
+                  </button>
                 </div>
-            </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="flex-grow container mx-auto p-4 md:p-6">
-            <!-- Summary Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="card bg-white rounded-2xl p-6 shadow-md">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-gray-500 font-medium">Total Budget</h3>
-                        <div class="p-2 rounded-lg bg-indigo-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="flex items-end justify-between">
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <p id="budget-amount" class="text-2xl font-bold editable-field px-2 py-1">₱2,500.00</p>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-600 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414
-                                        a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                </svg>
-                            </div>
-                            <p class="text-sm text-green-500 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                </svg>
-                                <span id="budget-change">+5% from last month</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card bg-white rounded-2xl p-6 shadow-md">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-gray-500 font-medium">Total Expenses</h3>
-                        <div class="p-2 rounded-lg bg-red-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="flex items-end justify-between">
-                        <div>
-                            <p id="expenses-amount" class="text-2xl font-bold">₱0.00</p>
-                            <p class="text-sm text-red-500 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
-                                </svg>
-                                <span id="expenses-change">0% from last month</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card bg-white rounded-2xl p-6 shadow-md">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-gray-500 font-medium">Remaining</h3>
-                        <div class="p-2 rounded-lg bg-green-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="flex items-end justify-between">
-                        <div>
-                            <p id="remaining-amount" class="text-2xl font-bold">₱2,500.00</p>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                                <div id="remaining-progress" class="bg-green-500 h-2.5 rounded-full" style="width: 100%"></div>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1"><span id="remaining-percentage">100</span>% of budget remaining</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card bg-white rounded-2xl p-6 shadow-md">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-gray-500 font-medium">Savings Goal</h3>
-                        <div class="p-2 rounded-lg bg-purple-100">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="flex items-end justify-between">
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <p id="savings-goal" class="text-2xl font-bold editable-field px-2 py-1">₱500.00</p>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-600 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414
-                                        a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                 </svg>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                                <div id="savings-progress" class="bg-purple-600 h-2.5 rounded-full" style="width: 0%"></div>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1"><span id="savings-percentage">0</span>% of monthly goal</p>
-                        </div>
-                    </div>
-                </div>
+              </form>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Chart Section -->
-                <div class="lg:col-span-2">
-                    <div class="bg-white rounded-2xl p-6 shadow-md mb-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-lg font-semibold">Expense Overview</h2>
-                            <div class="flex space-x-2">
-                                <button class="time-period-btn px-3 py-1 text-sm rounded-md bg-indigo-100 text-indigo-600 font-medium" data-period="week">Week</button>
-                                <button class="time-period-btn px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600 font-medium" data-period="month">Month</button>
-                                <button class="time-period-btn px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600 font-medium" data-period="year">Year</button>
-                            </div>
-                        </div>
-                        <div class="h-64">
-                            <canvas id="expenseChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-6 shadow-md">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-lg font-semibold">Recent Transactions</h2>
-                            <button id="view-all-transactions" class="text-indigo-600 text-sm font-medium flex items-center">
-                                View All
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-                        </div>
-                        <div id="transactions-container" class="space-y-4">
-                            <div class="flex items-center justify-center p-8 text-gray-500">
-                                <p>No transactions yet. Add your first expense!</p>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Category Breakdown -->
+            <div class="bg-white rounded-2xl p-6 shadow-md">
+              <h2 class="text-lg font-semibold mb-4">Spending by Category</h2>
+              <div class="mb-4">
+                <canvas id="categoryChart" height="200"></canvas>
+              </div>
+              <div id="category-breakdown" class="space-y-2 mt-4">
+                <div class="flex items-center justify-center p-4 text-gray-500">
+                  <p>No expenses yet to show categories</p>
                 </div>
-
-                <!-- Right Column -->
-                <div class="space-y-6">
-                    <!-- Add Expense Form -->
-                    <div class="bg-white rounded-2xl p-6 shadow-md">
-                        <h2 class="text-lg font-semibold mb-4">Add New Expense</h2>
-                        <form id="expense-form">
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                                    <input type="text" id="expense-description" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="What did you spend on?" required>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <span class="text-gray-500">₱</span>
-                                        </div>
-                                        <input type="number" id="expense-amount" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="0.00" step="0.01" min="0.01" required>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                                    <select id="expense-category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" required>
-                                        <option value="">Select a category</option>
-                                        <option value="food">Food & Dining</option>
-                                        <option value="transportation">Transportation</option>
-                                        <option value="entertainment">Entertainment</option>
-                                        <option value="utilities">Utilities</option>
-                                        <option value="shopping">Shopping</option>
-                                        <option value="health">Health</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                                    <input type="date" id="expense-date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" required>
-                                </div>
-                                <button type="submit" class="w-full btn-gradient text-white py-2 px-4 rounded-lg font-medium shadow-md">
-                                    Add Expense
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Category Breakdown -->
-                    <div class="bg-white rounded-2xl p-6 shadow-md">
-                        <h2 class="text-lg font-semibold mb-4">Spending by Category</h2>
-                        <div class="mb-4">
-                            <canvas id="categoryChart" height="200"></canvas>
-                        </div>
-                        <div id="category-breakdown" class="space-y-2 mt-4">
-                            <div class="flex items-center justify-center p-4 text-gray-500">
-                                <p>No expenses yet to show categories</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
-        </main>
+          </div>
+        </div>
+      </main>
 
-        <!-- Footer -->
-        <footer class="bg-white py-4 border-t">
-            <div class="container mx-auto px-6 text-center text-gray-500 text-sm">
-                <p>© <span id="current-year"></span> BudgetTracker. All rights reserved.</p>
-            </div>
-        </footer>
+      <!-- Footer -->
+      <footer class="bg-white py-4 border-t">
+        <div class="container mx-auto px-6 text-center text-gray-500 text-sm">
+          <p>
+            © <span id="current-year"></span> BudgetTracker. All rights
+            reserved.
+          </p>
+        </div>
+      </footer>
     </div>
 
     <!-- Budget Edit Modal -->
-    <div id="budget-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center z-50 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h3 class="text-lg font-semibold mb-4 text-white">Update Budget</h3>
-            <form id="budget-form">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Monthly Budget</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500">₱</span>
-                        </div>
-                        <input type="number" id="budget-input" class="w-full pl-8 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="0.00" step="0.01" min="0.01" required>
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="budget-cancel" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Save</button>
-                </div>
-            </form>
-        </div>
+    <div
+      id="budget-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center z-50 hidden"
+    >
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+        <h3 class="text-lg font-semibold mb-4 text-white">Update Budget</h3>
+        <form id="budget-form">
+          <div class="mb-4">
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >Monthly Budget</label
+            >
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <span class="text-gray-500">₱</span>
+              </div>
+              <input
+                type="number"
+                id="budget-input"
+                class="w-full pl-8 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                placeholder="0.00"
+                step="0.01"
+                min="0.01"
+                required
+              />
+            </div>
+          </div>
+          <div class="flex justify-end space-x-3">
+            <button
+              type="button"
+              id="budget-cancel"
+              class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- Savings Goal Edit Modal -->
-    <div id="savings-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center z-50 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h3 class="text-lg font-semibold mb-4 text-white">Update Savings Goal</h3>
-            <form id="savings-form">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Monthly Savings Goal</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500">₱</span>
-                        </div>
-                        <input type="number" id="savings-input" class="w-full pl-8 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="0.00" step="0.01" min="0.01" required>
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="savings-cancel" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Save</button>
-                </div>
-            </form>
-        </div>
+    <div
+      id="savings-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center z-50 hidden"
+    >
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+        <h3 class="text-lg font-semibold mb-4 text-white">
+          Update Savings Goal
+        </h3>
+        <form id="savings-form">
+          <div class="mb-4">
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >Monthly Savings Goal</label
+            >
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <span class="text-gray-500">₱</span>
+              </div>
+              <input
+                type="number"
+                id="savings-input"
+                class="w-full pl-8 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                placeholder="0.00"
+                step="0.01"
+                min="0.01"
+                required
+              />
+            </div>
+          </div>
+          <div class="flex justify-end space-x-3">
+            <button
+              type="button"
+              id="savings-cancel"
+              class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- All Transactions Modal -->
-    <div id="all-transactions-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center z-50 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-4xl max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-semibold text-white">All Transactions</h3>
-                <button id="close-transactions" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="mb-4">
-                <input type="text" id="transaction-search" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="Search transactions...">
-            </div>
-            
-            <div class="overflow-y-auto flex-grow">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-50 dark:bg-gray-700">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="all-transactions-body" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        <!-- Transactions will be inserted here -->
-                    </tbody>
-                </table>
-                
-                <div id="no-transactions-message" class="py-8 text-center text-gray-500 hidden">
-                    <p>No transactions found.</p>
-                </div>
-            </div>
+    <div
+      id="all-transactions-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-4xl max-h-[90vh] flex flex-col"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-semibold text-white">All Transactions</h3>
+          <button
+            id="close-transactions"
+            class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-gray-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
+
+        <div class="mb-4">
+          <input
+            type="text"
+            id="transaction-search"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+            placeholder="Search transactions..."
+          />
+        </div>
+
+        <div class="overflow-y-auto flex-grow">
+          <table
+            class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+          >
+            <thead class="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
+                  Date
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
+                  Description
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
+                  Category
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
+                  Amount
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              id="all-transactions-body"
+              class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+            >
+              <!-- Transactions will be inserted here -->
+            </tbody>
+          </table>
+
+          <div
+            id="no-transactions-message"
+            class="py-8 text-center text-gray-500 hidden"
+          >
+            <p>No transactions found.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Edit Transaction Modal -->
-    <div id="edit-transaction-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center z-50 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h3 class="text-lg font-semibold mb-4 text-white">Edit Transaction</h3>
-            <form id="edit-transaction-form">
-                <input type="hidden" id="edit-transaction-id">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
-                        <input type="text" id="edit-description" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Amount</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-500">₱</span>
-                            </div>
-                            <input type="number" id="edit-amount" class="w-full pl-8 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" step="0.01" min="0.01" required>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
-                        <select id="edit-category" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" required>
-                            <option value="food">Food & Dining</option>
-                            <option value="transportation">Transportation</option>
-                            <option value="entertainment">Entertainment</option>
-                            <option value="utilities">Utilities</option>
-                            <option value="shopping">Shopping</option>
-                            <option value="health">Health</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date</label>
-                        <input type="date" id="edit-date" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" required>
-                    </div>
+    <div
+      id="edit-transaction-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center z-50 hidden"
+    >
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+        <h3 class="text-lg font-semibold mb-4 text-white">Edit Transaction</h3>
+        <form id="edit-transaction-form">
+          <input type="hidden" id="edit-transaction-id" />
+          <div class="space-y-4">
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >Description</label
+              >
+              <input
+                type="text"
+                id="edit-description"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                required
+              />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >Amount</label
+              >
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                >
+                  <span class="text-gray-500">₱</span>
                 </div>
-                <div class="flex justify-end space-x-3 mt-6">
-                    <button type="button" id="edit-transaction-cancel" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Save Changes</button>
-                </div>
-            </form>
-        </div>
+                <input
+                  type="number"
+                  id="edit-amount"
+                  class="w-full pl-8 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                  step="0.01"
+                  min="0.01"
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >Category</label
+              >
+              <select
+                id="edit-category"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                required
+              >
+                <option value="food">Food & Dining</option>
+                <option value="transportation">Transportation</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="utilities">Utilities</option>
+                <option value="shopping">Shopping</option>
+                <option value="health">Health</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >Date</label
+              >
+              <input
+                type="date"
+                id="edit-date"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                required
+              />
+            </div>
+          </div>
+          <div class="flex justify-end space-x-3 mt-6">
+            <button
+              type="button"
+              id="edit-transaction-cancel"
+              class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            >
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div id="delete-confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center z-50 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h3 class="text-lg font-semibold mb-2 text-white">Delete Transaction</h3>
-            <p class="text-gray-600 dark:text-gray-300 mb-6">Are you sure you want to delete this transaction? This action cannot be undone.</p>
-            <input type="hidden" id="delete-transaction-id">
-            <div class="flex justify-end space-x-3">
-                <button type="button" id="delete-cancel" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">Cancel</button>
-                <button type="button" id="delete-confirm" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Delete</button>
-            </div>
+    <div
+      id="delete-confirmation-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center z-50 hidden"
+    >
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+        <h3 class="text-lg font-semibold mb-2 text-white">
+          Delete Transaction
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+          Are you sure you want to delete this transaction? This action cannot
+          be undone.
+        </p>
+        <input type="hidden" id="delete-transaction-id" />
+        <div class="flex justify-end space-x-3">
+          <button
+            type="button"
+            id="delete-cancel"
+            class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            id="delete-confirm"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+          >
+            Delete
+          </button>
         </div>
+      </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize state
-            const state = {
-                darkMode: false,
-                budget: 2500.00,
-                savingsGoal: 500.00,
-                expenses: [],
-                savings: 0,
-                categoryColors: {
-                    food: { bg: 'rgba(99, 102, 241, 0.8)', color: '#6366f1' },
-                    transportation: { bg: 'rgba(59, 130, 246, 0.8)', color: '#3b82f6' },
-                    entertainment: { bg: 'rgba(139, 92, 246, 0.8)', color: '#8b5cf6' },
-                    utilities: { bg: 'rgba(34, 197, 94, 0.8)', color: '#22c55e' },
-                    shopping: { bg: 'rgba(249, 115, 22, 0.8)', color: '#f97316' },
-                    health: { bg: 'rgba(236, 72, 153, 0.8)', color: '#ec4899' },
-                    other: { bg: 'rgba(234, 179, 8, 0.8)', color: '#eab308' }
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize state
+        const state = {
+          darkMode: false,
+          budget: 2500.0,
+          savingsGoal: 500.0,
+          expenses: [],
+          savings: 0,
+          categoryColors: {
+            food: { bg: "rgba(99, 102, 241, 0.8)", color: "#6366f1" },
+            transportation: { bg: "rgba(59, 130, 246, 0.8)", color: "#3b82f6" },
+            entertainment: { bg: "rgba(139, 92, 246, 0.8)", color: "#8b5cf6" },
+            utilities: { bg: "rgba(34, 197, 94, 0.8)", color: "#22c55e" },
+            shopping: { bg: "rgba(249, 115, 22, 0.8)", color: "#f97316" },
+            health: { bg: "rgba(236, 72, 153, 0.8)", color: "#ec4899" },
+            other: { bg: "rgba(234, 179, 8, 0.8)", color: "#eab308" },
+          },
+          categoryIcons: {
+            food: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>',
+            transportation:
+              '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>',
+            entertainment:
+              '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
+            utilities:
+              '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>',
+            shopping:
+              '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>',
+            health:
+              '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>',
+            other:
+              '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" /></svg>',
+          },
+          expenseChart: null,
+          categoryChart: null,
+          currentTimePeriod: "week",
+          filteredTransactions: [],
+        };
+
+        // Load data from localStorage if available
+        loadFromLocalStorage();
+
+        // Set current date
+        updateCurrentDate();
+
+        // Set current year in footer
+        document.getElementById("current-year").textContent =
+          new Date().getFullYear();
+
+        // Set default date in expense form to today
+        document.getElementById("expense-date").valueAsDate = new Date();
+
+        // Initialize charts
+        initializeCharts();
+
+        // Update UI with initial data
+        updateUI();
+
+        // Event Listeners
+        document
+          .getElementById("theme-toggle")
+          .addEventListener("click", toggleDarkMode);
+        document
+          .getElementById("expense-form")
+          .addEventListener("submit", handleAddExpense);
+        document
+          .getElementById("budget-amount")
+          .addEventListener("click", openBudgetModal);
+        document
+          .getElementById("savings-goal")
+          .addEventListener("click", openSavingsModal);
+        document
+          .getElementById("budget-form")
+          .addEventListener("submit", updateBudget);
+        document
+          .getElementById("savings-form")
+          .addEventListener("submit", updateSavingsGoal);
+        document
+          .getElementById("budget-cancel")
+          .addEventListener("click", closeBudgetModal);
+        document
+          .getElementById("savings-cancel")
+          .addEventListener("click", closeSavingsModal);
+
+        // View all transactions
+        document
+          .getElementById("view-all-transactions")
+          .addEventListener("click", openAllTransactionsModal);
+        document
+          .getElementById("close-transactions")
+          .addEventListener("click", closeAllTransactionsModal);
+
+        // Edit transaction
+        document
+          .getElementById("edit-transaction-form")
+          .addEventListener("submit", saveEditedTransaction);
+        document
+          .getElementById("edit-transaction-cancel")
+          .addEventListener("click", closeEditTransactionModal);
+
+        // Delete transaction
+        document
+          .getElementById("delete-confirm")
+          .addEventListener("click", deleteTransaction);
+        document
+          .getElementById("delete-cancel")
+          .addEventListener("click", closeDeleteConfirmationModal);
+
+        // Search transactions
+        document
+          .getElementById("transaction-search")
+          .addEventListener("input", searchTransactions);
+
+        // Time period buttons for chart
+        document.querySelectorAll(".time-period-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const period = this.getAttribute("data-period");
+            changeTimePeriod(period);
+          });
+        });
+
+        // Functions
+        function updateCurrentDate() {
+          const now = new Date();
+          const options = { year: "numeric", month: "long", day: "numeric" };
+          document
+            .getElementById("current-date")
+            .querySelector("span").textContent = now.toLocaleDateString(
+            undefined,
+            options
+          );
+        }
+
+        function toggleDarkMode() {
+          state.darkMode = !state.darkMode;
+          document.body.classList.toggle("dark-mode", state.darkMode);
+
+          // Toggle moon/sun icons
+          document
+            .getElementById("moon-icon")
+            .classList.toggle("hidden", state.darkMode);
+          document
+            .getElementById("sun-icon")
+            .classList.toggle("hidden", !state.darkMode);
+
+          // Update charts for dark mode
+          updateChartsTheme();
+
+          // Save preference to localStorage
+          localStorage.setItem("budgetTrackerDarkMode", state.darkMode);
+        }
+
+        function updateChartsTheme() {
+          const textColor = state.darkMode ? "#f3f4f6" : "#374151";
+          const gridColor = state.darkMode
+            ? "rgba(255, 255, 255, 0.1)"
+            : "rgba(0, 0, 0, 0.05)";
+
+          if (state.expenseChart) {
+            state.expenseChart.options.scales.x.ticks.color = textColor;
+            state.expenseChart.options.scales.y.ticks.color = textColor;
+            state.expenseChart.options.scales.y.grid.color = gridColor;
+            state.expenseChart.options.plugins.legend.labels.color = textColor;
+            state.expenseChart.update();
+          }
+
+          if (state.categoryChart) {
+            state.categoryChart.options.plugins.legend.labels.color = textColor;
+            state.categoryChart.update();
+          }
+        }
+
+        function initializeCharts() {
+          // Expense Chart
+          const expenseCtx = document
+            .getElementById("expenseChart")
+            .getContext("2d");
+          state.expenseChart = new Chart(expenseCtx, {
+            type: "line",
+            data: {
+              labels: [],
+              datasets: [
+                {
+                  label: "Expenses",
+                  data: [],
+                  backgroundColor: "rgba(99, 102, 241, 0.1)",
+                  borderColor: "rgba(99, 102, 241, 1)",
+                  borderWidth: 2,
+                  tension: 0.4,
+                  fill: true,
                 },
-                categoryIcons: {
-                    food: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>',
-                    transportation: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>',
-                    entertainment: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
-                    utilities: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>',
-                    shopping: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>',
-                    health: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>',
-                    other: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" /></svg>'
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: "top",
                 },
-                expenseChart: null,
-                categoryChart: null,
-                currentTimePeriod: 'week',
-                filteredTransactions: []
-            };
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  grid: {
+                    color: "rgba(0, 0, 0, 0.05)",
+                  },
+                },
+                x: {
+                  grid: {
+                    display: false,
+                  },
+                },
+              },
+            },
+          });
 
-            // Load data from localStorage if available
-            loadFromLocalStorage();
+          // Category Chart
+          const categoryCtx = document
+            .getElementById("categoryChart")
+            .getContext("2d");
+          state.categoryChart = new Chart(categoryCtx, {
+            type: "doughnut",
+            data: {
+              labels: [],
+              datasets: [
+                {
+                  data: [],
+                  backgroundColor: [],
+                  borderWidth: 0,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false,
+                },
+              },
+              cutout: "70%",
+            },
+          });
 
-            // Set current date
-            updateCurrentDate();
-            
-            // Set current year in footer
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-            
-            // Set default date in expense form to today
-            document.getElementById('expense-date').valueAsDate = new Date();
+          // Update charts with data
+          updateCharts();
+        }
 
-            // Initialize charts
-            initializeCharts();
-            
-            // Update UI with initial data
-            updateUI();
+        function handleAddExpense(e) {
+          e.preventDefault();
 
-            // Event Listeners
-            document.getElementById('theme-toggle').addEventListener('click', toggleDarkMode);
-            document.getElementById('expense-form').addEventListener('submit', handleAddExpense);
-            document.getElementById('budget-amount').addEventListener('click', openBudgetModal);
-            document.getElementById('savings-goal').addEventListener('click', openSavingsModal);
-            document.getElementById('budget-form').addEventListener('submit', updateBudget);
-            document.getElementById('savings-form').addEventListener('submit', updateSavingsGoal);
-            document.getElementById('budget-cancel').addEventListener('click', closeBudgetModal);
-            document.getElementById('savings-cancel').addEventListener('click', closeSavingsModal);
-            
-            // View all transactions
-            document.getElementById('view-all-transactions').addEventListener('click', openAllTransactionsModal);
-            document.getElementById('close-transactions').addEventListener('click', closeAllTransactionsModal);
-            
-            // Edit transaction
-            document.getElementById('edit-transaction-form').addEventListener('submit', saveEditedTransaction);
-            document.getElementById('edit-transaction-cancel').addEventListener('click', closeEditTransactionModal);
-            
-            // Delete transaction
-            document.getElementById('delete-confirm').addEventListener('click', deleteTransaction);
-            document.getElementById('delete-cancel').addEventListener('click', closeDeleteConfirmationModal);
-            
-            // Search transactions
-            document.getElementById('transaction-search').addEventListener('input', searchTransactions);
-            
-            // Time period buttons for chart
-            document.querySelectorAll('.time-period-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const period = this.getAttribute('data-period');
-                    changeTimePeriod(period);
-                });
-            });
+          const description = document.getElementById(
+            "expense-description"
+          ).value;
+          const amount = parseFloat(
+            document.getElementById("expense-amount").value
+          );
+          const category = document.getElementById("expense-category").value;
+          const date = document.getElementById("expense-date").value;
 
-            // Functions
-            function updateCurrentDate() {
-                const now = new Date();
-                const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                document.getElementById('current-date').querySelector('span').textContent = now.toLocaleDateString(undefined, options);
-            }
+          // Add new expense
+          const newExpense = {
+            id: Date.now(),
+            description,
+            amount,
+            category,
+            date,
+            timestamp: new Date(date).getTime(),
+          };
 
-            function toggleDarkMode() {
-                state.darkMode = !state.darkMode;
-                document.body.classList.toggle('dark-mode', state.darkMode);
-                
-                // Toggle moon/sun icons
-                document.getElementById('moon-icon').classList.toggle('hidden', state.darkMode);
-                document.getElementById('sun-icon').classList.toggle('hidden', !state.darkMode);
-                
-                // Update charts for dark mode
-                updateChartsTheme();
-                
-                // Save preference to localStorage
-                localStorage.setItem('budgetTrackerDarkMode', state.darkMode);
-            }
+          state.expenses.push(newExpense);
 
-            function updateChartsTheme() {
-                const textColor = state.darkMode ? '#f3f4f6' : '#374151';
-                const gridColor = state.darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
-                
-                if (state.expenseChart) {
-                    state.expenseChart.options.scales.x.ticks.color = textColor;
-                    state.expenseChart.options.scales.y.ticks.color = textColor;
-                    state.expenseChart.options.scales.y.grid.color = gridColor;
-                    state.expenseChart.options.plugins.legend.labels.color = textColor;
-                    state.expenseChart.update();
-                }
-                
-                if (state.categoryChart) {
-                    state.categoryChart.options.plugins.legend.labels.color = textColor;
-                    state.categoryChart.update();
-                }
-            }
+          // Sort expenses by date (newest first)
+          state.expenses.sort((a, b) => b.timestamp - a.timestamp);
 
-            function initializeCharts() {
-                // Expense Chart
-                const expenseCtx = document.getElementById('expenseChart').getContext('2d');
-                state.expenseChart = new Chart(expenseCtx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'Expenses',
-                            data: [],
-                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                            borderColor: 'rgba(99, 102, 241, 1)',
-                            borderWidth: 2,
-                            tension: 0.4,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    color: 'rgba(0, 0, 0, 0.05)'
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    display: false
-                                }
-                            }
-                        }
-                    }
-                });
+          // Update UI
+          updateUI();
 
-                // Category Chart
-                const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-                state.categoryChart = new Chart(categoryCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            data: [],
-                            backgroundColor: [],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        cutout: '70%'
-                    }
-                });
-                
-                // Update charts with data
-                updateCharts();
-            }
+          // Save to localStorage
+          saveToLocalStorage();
 
-            function handleAddExpense(e) {
-                e.preventDefault();
-                
-                const description = document.getElementById('expense-description').value;
-                const amount = parseFloat(document.getElementById('expense-amount').value);
-                const category = document.getElementById('expense-category').value;
-                const date = document.getElementById('expense-date').value;
-                
-                // Add new expense
-                const newExpense = {
-                    id: Date.now(),
-                    description,
-                    amount,
-                    category,
-                    date,
-                    timestamp: new Date(date).getTime()
-                };
-                
-                state.expenses.push(newExpense);
-                
-                // Sort expenses by date (newest first)
-                state.expenses.sort((a, b) => b.timestamp - a.timestamp);
-                
-                // Update UI
-                updateUI();
-                
-                // Save to localStorage
-                saveToLocalStorage();
-                
-                // Reset form
-                document.getElementById('expense-form').reset();
-                document.getElementById('expense-date').valueAsDate = new Date();
-                
-                // Show success message
-                showNotification('Expense added successfully!');
-            }
+          // Reset form
+          document.getElementById("expense-form").reset();
+          document.getElementById("expense-date").valueAsDate = new Date();
 
-            function showNotification(message) {
-                // Create notification element
-                const notification = document.createElement('div');
-                notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transform transition-all duration-500 translate-y-20 opacity-0';
-                notification.textContent = message;
-                document.body.appendChild(notification);
-                
-                // Show notification
-                setTimeout(() => {
-                    notification.classList.remove('translate-y-20', 'opacity-0');
-                }, 100);
-                
-                // Hide and remove notification
-                setTimeout(() => {
-                    notification.classList.add('translate-y-20', 'opacity-0');
-                    setTimeout(() => {
-                        document.body.removeChild(notification);
-                    }, 500);
-                }, 3000);
-            }
+          // Show success message
+          showNotification("Expense added successfully!");
+        }
 
-            function updateUI() {
-                // Update summary cards
-                updateSummaryCards();
-                
-                // Update transactions list
-                updateTransactionsList();
-                
-                // Update category breakdown
-                updateCategoryBreakdown();
-                
-                // Update charts
-                updateCharts();
-            }
+        function showNotification(message) {
+          // Create notification element
+          const notification = document.createElement("div");
+          notification.className =
+            "fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transform transition-all duration-500 translate-y-20 opacity-0";
+          notification.textContent = message;
+          document.body.appendChild(notification);
 
-            function updateSummaryCards() {
-                // Calculate total expenses
-                const totalExpenses = state.expenses.reduce((sum, expense) => sum + expense.amount, 0);
-                
-                // Update expenses amount
-                document.getElementById('expenses-amount').textContent = formatCurrency(totalExpenses);
-                
-                // Update remaining amount
-                const remaining = state.budget - totalExpenses;
-                document.getElementById('remaining-amount').textContent = formatCurrency(remaining);
-                
-                // Update remaining percentage
-                const remainingPercentage = state.budget > 0 ? Math.round((remaining / state.budget) * 100) : 0;
-                document.getElementById('remaining-percentage').textContent = remainingPercentage;
-                document.getElementById('remaining-progress').style.width = `${remainingPercentage}%`;
-                
-                // Change color based on percentage
-                if (remainingPercentage < 20) {
-                    document.getElementById('remaining-progress').className = 'bg-red-500 h-2.5 rounded-full';
-                } else if (remainingPercentage < 50) {
-                    document.getElementById('remaining-progress').className = 'bg-yellow-500 h-2.5 rounded-full';
-                } else {
-                    document.getElementById('remaining-progress').className = 'bg-green-500 h-2.5 rounded-full';
-                }
-                
-                // Update savings progress
-                const savingsPercentage = state.savingsGoal > 0 ? Math.round((state.savings / state.savingsGoal) * 100) : 0;
-                document.getElementById('savings-percentage').textContent = savingsPercentage;
-                document.getElementById('savings-progress').style.width = `${savingsPercentage}%`;
-            }
+          // Show notification
+          setTimeout(() => {
+            notification.classList.remove("translate-y-20", "opacity-0");
+          }, 100);
 
-            function updateTransactionsList() {
-                const container = document.getElementById('transactions-container');
-                
-                if (state.expenses.length === 0) {
-                    container.innerHTML = `
+          // Hide and remove notification
+          setTimeout(() => {
+            notification.classList.add("translate-y-20", "opacity-0");
+            setTimeout(() => {
+              document.body.removeChild(notification);
+            }, 500);
+          }, 3000);
+        }
+
+        function updateUI() {
+          // Update summary cards
+          updateSummaryCards();
+
+          // Update transactions list
+          updateTransactionsList();
+
+          // Update category breakdown
+          updateCategoryBreakdown();
+
+          // Update charts
+          updateCharts();
+        }
+
+        function updateSummaryCards() {
+          // Calculate total expenses
+          const totalExpenses = state.expenses.reduce(
+            (sum, expense) => sum + expense.amount,
+            0
+          );
+
+          // Update expenses amount
+          document.getElementById("expenses-amount").textContent =
+            formatCurrency(totalExpenses);
+
+          // Update remaining amount
+          const remaining = state.budget - totalExpenses;
+          document.getElementById("remaining-amount").textContent =
+            formatCurrency(remaining);
+
+          // Update remaining percentage
+          const remainingPercentage =
+            state.budget > 0 ? Math.round((remaining / state.budget) * 100) : 0;
+          document.getElementById("remaining-percentage").textContent =
+            remainingPercentage;
+          document.getElementById(
+            "remaining-progress"
+          ).style.width = `${remainingPercentage}%`;
+
+          // Change color based on percentage
+          if (remainingPercentage < 20) {
+            document.getElementById("remaining-progress").className =
+              "bg-red-500 h-2.5 rounded-full";
+          } else if (remainingPercentage < 50) {
+            document.getElementById("remaining-progress").className =
+              "bg-yellow-500 h-2.5 rounded-full";
+          } else {
+            document.getElementById("remaining-progress").className =
+              "bg-green-500 h-2.5 rounded-full";
+          }
+
+          // Update savings progress
+          const savingsPercentage =
+            state.savingsGoal > 0
+              ? Math.round((state.savings / state.savingsGoal) * 100)
+              : 0;
+          document.getElementById("savings-percentage").textContent =
+            savingsPercentage;
+          document.getElementById(
+            "savings-progress"
+          ).style.width = `${savingsPercentage}%`;
+        }
+
+        function updateTransactionsList() {
+          const container = document.getElementById("transactions-container");
+
+          if (state.expenses.length === 0) {
+            container.innerHTML = `
                         <div class="flex items-center justify-center p-8 text-gray-500">
                             <p>No transactions yet. Add your first expense!</p>
                         </div>
                     `;
-                    return;
-                }
-                
-                // Clear container
-                container.innerHTML = '';
-                
-                // Add transactions (limit to 5)
-                const recentExpenses = state.expenses.slice(0, 5);
-                
-                recentExpenses.forEach(expense => {
-                    const categoryColor = state.categoryColors[expense.category] || state.categoryColors.other;
-                    const date = new Date(expense.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-                    
-                    const transactionEl = document.createElement('div');
-                    transactionEl.className = 'flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition';
-                    transactionEl.innerHTML = `
+            return;
+          }
+
+          // Clear container
+          container.innerHTML = "";
+
+          // Add transactions (limit to 5)
+          const recentExpenses = state.expenses.slice(0, 5);
+
+          recentExpenses.forEach((expense) => {
+            const categoryColor =
+              state.categoryColors[expense.category] ||
+              state.categoryColors.other;
+            const date = new Date(expense.date).toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            });
+
+            const transactionEl = document.createElement("div");
+            transactionEl.className =
+              "flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition";
+            transactionEl.innerHTML = `
                         <div class="flex items-center">
-                            <div class="p-2 rounded-lg mr-4" style="background-color: ${categoryColor.bg.replace('0.8', '0.2')}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="${categoryColor.color}">
+                            <div class="p-2 rounded-lg mr-4" style="background-color: ${categoryColor.bg.replace(
+                              "0.8",
+                              "0.2"
+                            )}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="${
+                                  categoryColor.color
+                                }">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
                             </div>
                             <div>
-                                <p class="font-medium">${expense.description}</p>
+                                <p class="font-medium">${
+                                  expense.description
+                                }</p>
                                 <p class="text-sm text-gray-500">${date}</p>
                             </div>
                         </div>
-                        <p class="font-semibold text-red-500">-${formatCurrency(expense.amount)}</p>
+                        <p class="font-semibold text-red-500">-${formatCurrency(
+                          expense.amount
+                        )}</p>
                     `;
-                    
-                    container.appendChild(transactionEl);
-                });
-            }
 
-            function updateCategoryBreakdown() {
-                const container = document.getElementById('category-breakdown');
-                
-                if (state.expenses.length === 0) {
-                    container.innerHTML = `
+            container.appendChild(transactionEl);
+          });
+        }
+
+        function updateCategoryBreakdown() {
+          const container = document.getElementById("category-breakdown");
+
+          if (state.expenses.length === 0) {
+            container.innerHTML = `
                         <div class="flex items-center justify-center p-4 text-gray-500">
                             <p>No expenses yet to show categories</p>
                         </div>
                     `;
-                    return;
-                }
-                
-                // Group expenses by category
-                const categories = {};
-                state.expenses.forEach(expense => {
-                    if (!categories[expense.category]) {
-                        categories[expense.category] = 0;
-                    }
-                    categories[expense.category] += expense.amount;
-                });
-                
-                // Clear container
-                container.innerHTML = '';
-                
-                // Add category items
-                Object.entries(categories).forEach(([category, amount]) => {
-                    const categoryColor = state.categoryColors[category] || state.categoryColors.other;
-                    
-                    const categoryEl = document.createElement('div');
-                    categoryEl.className = 'flex items-center justify-between';
-                    categoryEl.innerHTML = `
+            return;
+          }
+
+          // Group expenses by category
+          const categories = {};
+          state.expenses.forEach((expense) => {
+            if (!categories[expense.category]) {
+              categories[expense.category] = 0;
+            }
+            categories[expense.category] += expense.amount;
+          });
+
+          // Clear container
+          container.innerHTML = "";
+
+          // Add category items
+          Object.entries(categories).forEach(([category, amount]) => {
+            const categoryColor =
+              state.categoryColors[category] || state.categoryColors.other;
+
+            const categoryEl = document.createElement("div");
+            categoryEl.className = "flex items-center justify-between";
+            categoryEl.innerHTML = `
                         <div class="flex items-center">
-                            <div class="w-3 h-3 rounded-full mr-2" style="background-color: ${categoryColor.color}"></div>
-                            <span class="text-sm">${getCategoryName(category)}</span>
+                            <div class="w-3 h-3 rounded-full mr-2" style="background-color: ${
+                              categoryColor.color
+                            }"></div>
+                            <span class="text-sm">${getCategoryName(
+                              category
+                            )}</span>
                         </div>
-                        <span class="text-sm font-medium">${formatCurrency(amount)}</span>
+                        <span class="text-sm font-medium">${formatCurrency(
+                          amount
+                        )}</span>
                     `;
-                    
-                    container.appendChild(categoryEl);
-                });
-            }
 
-            function updateCharts() {
-                updateExpenseChart();
-                updateCategoryChart();
-            }
+            container.appendChild(categoryEl);
+          });
+        }
 
-            function updateExpenseChart() {
-                if (!state.expenseChart) return;
-                
-                const { labels, data } = getExpenseChartData();
-                
-                state.expenseChart.data.labels = labels;
-                state.expenseChart.data.datasets[0].data = data;
-                state.expenseChart.update();
-            }
+        function updateCharts() {
+          updateExpenseChart();
+          updateCategoryChart();
+        }
 
-            function getExpenseChartData() {
-                const now = new Date();
-                let labels = [];
-                let data = [];
-                
-                if (state.currentTimePeriod === 'week') {
-                    // Last 7 days
-                    for (let i = 6; i >= 0; i--) {
-                        const date = new Date(now);
-                        date.setDate(date.getDate() - i);
-                        labels.push(date.toLocaleDateString(undefined, { weekday: 'short' }));
-                        
-                        const dayExpenses = state.expenses.filter(expense => {
-                            const expenseDate = new Date(expense.date);
-                            return expenseDate.toDateString() === date.toDateString();
-                        });
-                        
-                        const dayTotal = dayExpenses.reduce((sum, expense) => sum + expense.amount, 0);
-                        data.push(dayTotal);
-                    }
-                } else if (state.currentTimePeriod === 'month') {
-                    // Current month by week
-                    const currentMonth = now.getMonth();
-                    const currentYear = now.getFullYear();
-                    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-                    
-                    // Split month into weeks
-                    for (let i = 1; i <= 4; i++) {
-                        const weekStart = (i - 1) * 7 + 1;
-                        const weekEnd = Math.min(i * 7, daysInMonth);
-                        labels.push(`Week ${i}`);
-                        
-                        const weekExpenses = state.expenses.filter(expense => {
-                            const expenseDate = new Date(expense.date);
-                            const expenseDay = expenseDate.getDate();
-                            return expenseDate.getMonth() === currentMonth && 
-                                   expenseDate.getFullYear() === currentYear &&
-                                   expenseDay >= weekStart && 
-                                   expenseDay <= weekEnd;
-                        });
-                        
-                        const weekTotal = weekExpenses.reduce((sum, expense) => sum + expense.amount, 0);
-                        data.push(weekTotal);
-                    }
-                } else if (state.currentTimePeriod === 'year') {
-                    // Last 12 months
-                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                    
-                    for (let i = 11; i >= 0; i--) {
-                        const date = new Date(now);
-                        date.setMonth(date.getMonth() - i);
-                        const monthIndex = date.getMonth();
-                        const year = date.getFullYear();
-                        
-                        labels.push(`${monthNames[monthIndex]}`);
-                        
-                        const monthExpenses = state.expenses.filter(expense => {
-                            const expenseDate = new Date(expense.date);
-                            return expenseDate.getMonth() === monthIndex && 
-                                   expenseDate.getFullYear() === year;
-                        });
-                        
-                        const monthTotal = monthExpenses.reduce((sum, expense) => sum + expense.amount, 0);
-                        data.push(monthTotal);
-                    }
-                }
-                
-                return { labels, data };
-            }
+        function updateExpenseChart() {
+          if (!state.expenseChart) return;
 
-            function updateCategoryChart() {
-                if (!state.categoryChart) return;
-                
-                if (state.expenses.length === 0) {
-                    state.categoryChart.data.labels = [];
-                    state.categoryChart.data.datasets[0].data = [];
-                    state.categoryChart.data.datasets[0].backgroundColor = [];
-                    state.categoryChart.update();
-                    return;
-                }
-                
-                // Group expenses by category
-                const categories = {};
-                state.expenses.forEach(expense => {
-                    if (!categories[expense.category]) {
-                        categories[expense.category] = 0;
-                    }
-                    categories[expense.category] += expense.amount;
-                });
-                
-                const labels = [];
-                const data = [];
-                const colors = [];
-                
-                Object.entries(categories).forEach(([category, amount]) => {
-                    labels.push(getCategoryName(category));
-                    data.push(amount);
-                    colors.push(state.categoryColors[category]?.bg || state.categoryColors.other.bg);
-                });
-                
-                state.categoryChart.data.labels = labels;
-                state.categoryChart.data.datasets[0].data = data;
-                state.categoryChart.data.datasets[0].backgroundColor = colors;
-                state.categoryChart.update();
-            }
+          const { labels, data } = getExpenseChartData();
 
-            function changeTimePeriod(period) {
-                state.currentTimePeriod = period;
-                
-                // Update active button
-                document.querySelectorAll('.time-period-btn').forEach(btn => {
-                    const btnPeriod = btn.getAttribute('data-period');
-                    if (btnPeriod === period) {
-                        btn.className = 'time-period-btn px-3 py-1 text-sm rounded-md bg-indigo-100 text-indigo-600 font-medium';
-                    } else {
-                        btn.className = 'time-period-btn px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600 font-medium';
-                    }
-                });
-                
-                // Update chart
-                updateExpenseChart();
-            }
+          state.expenseChart.data.labels = labels;
+          state.expenseChart.data.datasets[0].data = data;
+          state.expenseChart.update();
+        }
 
-            function openBudgetModal() {
-                document.getElementById('budget-input').value = state.budget;
-                document.getElementById('budget-modal').classList.remove('hidden');
-            }
+        function getExpenseChartData() {
+          const now = new Date();
+          let labels = [];
+          let data = [];
 
-            function closeBudgetModal() {
-                document.getElementById('budget-modal').classList.add('hidden');
-            }
+          if (state.currentTimePeriod === "week") {
+            // Last 7 days
+            for (let i = 6; i >= 0; i--) {
+              const date = new Date(now);
+              date.setDate(date.getDate() - i);
+              labels.push(
+                date.toLocaleDateString(undefined, { weekday: "short" })
+              );
 
-            function openSavingsModal() {
-                document.getElementById('savings-input').value = state.savingsGoal;
-                document.getElementById('savings-modal').classList.remove('hidden');
-            }
+              const dayExpenses = state.expenses.filter((expense) => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.toDateString() === date.toDateString();
+              });
 
-            function closeSavingsModal() {
-                document.getElementById('savings-modal').classList.add('hidden');
+              const dayTotal = dayExpenses.reduce(
+                (sum, expense) => sum + expense.amount,
+                0
+              );
+              data.push(dayTotal);
             }
+          } else if (state.currentTimePeriod === "month") {
+            // Current month by week
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            const daysInMonth = new Date(
+              currentYear,
+              currentMonth + 1,
+              0
+            ).getDate();
 
-            function updateBudget(e) {
-                e.preventDefault();
-                const newBudget = parseFloat(document.getElementById('budget-input').value);
-                state.budget = newBudget;
-                document.getElementById('budget-amount').textContent = formatCurrency(newBudget);
-                updateUI();
-                saveToLocalStorage();
-                closeBudgetModal();
-                showNotification('Budget updated successfully!');
+            // Split month into weeks
+            for (let i = 1; i <= 4; i++) {
+              const weekStart = (i - 1) * 7 + 1;
+              const weekEnd = Math.min(i * 7, daysInMonth);
+              labels.push(`Week ${i}`);
+
+              const weekExpenses = state.expenses.filter((expense) => {
+                const expenseDate = new Date(expense.date);
+                const expenseDay = expenseDate.getDate();
+                return (
+                  expenseDate.getMonth() === currentMonth &&
+                  expenseDate.getFullYear() === currentYear &&
+                  expenseDay >= weekStart &&
+                  expenseDay <= weekEnd
+                );
+              });
+
+              const weekTotal = weekExpenses.reduce(
+                (sum, expense) => sum + expense.amount,
+                0
+              );
+              data.push(weekTotal);
             }
+          } else if (state.currentTimePeriod === "year") {
+            // Last 12 months
+            const monthNames = [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
+            ];
 
-            function updateSavingsGoal(e) {
-                e.preventDefault();
-                const newGoal = parseFloat(document.getElementById('savings-input').value);
-                state.savingsGoal = newGoal;
-                document.getElementById('savings-goal').textContent = formatCurrency(newGoal);
-                updateUI();
-                saveToLocalStorage();
-                closeSavingsModal();
-                showNotification('Savings goal updated successfully!');
+            for (let i = 11; i >= 0; i--) {
+              const date = new Date(now);
+              date.setMonth(date.getMonth() - i);
+              const monthIndex = date.getMonth();
+              const year = date.getFullYear();
+
+              labels.push(`${monthNames[monthIndex]}`);
+
+              const monthExpenses = state.expenses.filter((expense) => {
+                const expenseDate = new Date(expense.date);
+                return (
+                  expenseDate.getMonth() === monthIndex &&
+                  expenseDate.getFullYear() === year
+                );
+              });
+
+              const monthTotal = monthExpenses.reduce(
+                (sum, expense) => sum + expense.amount,
+                0
+              );
+              data.push(monthTotal);
             }
+          }
 
-            function openAllTransactionsModal() {
-                // Reset search field
-                document.getElementById('transaction-search').value = '';
-                
-                // Set filtered transactions to all expenses
-                state.filteredTransactions = [...state.expenses];
-                
-                // Update transactions table
-                updateAllTransactionsTable();
-                
-                // Show modal
-                document.getElementById('all-transactions-modal').classList.remove('hidden');
+          return { labels, data };
+        }
+
+        function updateCategoryChart() {
+          if (!state.categoryChart) return;
+
+          if (state.expenses.length === 0) {
+            state.categoryChart.data.labels = [];
+            state.categoryChart.data.datasets[0].data = [];
+            state.categoryChart.data.datasets[0].backgroundColor = [];
+            state.categoryChart.update();
+            return;
+          }
+
+          // Group expenses by category
+          const categories = {};
+          state.expenses.forEach((expense) => {
+            if (!categories[expense.category]) {
+              categories[expense.category] = 0;
             }
+            categories[expense.category] += expense.amount;
+          });
 
-            function closeAllTransactionsModal() {
-                document.getElementById('all-transactions-modal').classList.add('hidden');
+          const labels = [];
+          const data = [];
+          const colors = [];
+
+          Object.entries(categories).forEach(([category, amount]) => {
+            labels.push(getCategoryName(category));
+            data.push(amount);
+            colors.push(
+              state.categoryColors[category]?.bg ||
+                state.categoryColors.other.bg
+            );
+          });
+
+          state.categoryChart.data.labels = labels;
+          state.categoryChart.data.datasets[0].data = data;
+          state.categoryChart.data.datasets[0].backgroundColor = colors;
+          state.categoryChart.update();
+        }
+
+        function changeTimePeriod(period) {
+          state.currentTimePeriod = period;
+
+          // Update active button
+          document.querySelectorAll(".time-period-btn").forEach((btn) => {
+            const btnPeriod = btn.getAttribute("data-period");
+            if (btnPeriod === period) {
+              btn.className =
+                "time-period-btn px-3 py-1 text-sm rounded-md bg-indigo-100 text-indigo-600 font-medium";
+            } else {
+              btn.className =
+                "time-period-btn px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600 font-medium";
             }
+          });
 
-            function updateAllTransactionsTable() {
-                const tableBody = document.getElementById('all-transactions-body');
-                const noTransactionsMessage = document.getElementById('no-transactions-message');
-                
-                // Clear table
-                tableBody.innerHTML = '';
-                
-                if (state.filteredTransactions.length === 0) {
-                    noTransactionsMessage.classList.remove('hidden');
-                    return;
-                }
-                
-                noTransactionsMessage.classList.add('hidden');
-                
-                // Add transactions to table
-                state.filteredTransactions.forEach(expense => {
-                    const categoryColor = state.categoryColors[expense.category] || state.categoryColors.other;
-                    const date = new Date(expense.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-                    
-                    const row = document.createElement('tr');
-                    row.className = 'transaction-row';
-                    row.innerHTML = `
+          // Update chart
+          updateExpenseChart();
+        }
+
+        function openBudgetModal() {
+          document.getElementById("budget-input").value = state.budget;
+          document.getElementById("budget-modal").classList.remove("hidden");
+        }
+
+        function closeBudgetModal() {
+          document.getElementById("budget-modal").classList.add("hidden");
+        }
+
+        function openSavingsModal() {
+          document.getElementById("savings-input").value = state.savingsGoal;
+          document.getElementById("savings-modal").classList.remove("hidden");
+        }
+
+        function closeSavingsModal() {
+          document.getElementById("savings-modal").classList.add("hidden");
+        }
+
+        function updateBudget(e) {
+          e.preventDefault();
+          const newBudget = parseFloat(
+            document.getElementById("budget-input").value
+          );
+          state.budget = newBudget;
+          document.getElementById("budget-amount").textContent =
+            formatCurrency(newBudget);
+          updateUI();
+          saveToLocalStorage();
+          closeBudgetModal();
+          showNotification("Budget updated successfully!");
+        }
+
+        function updateSavingsGoal(e) {
+          e.preventDefault();
+          const newGoal = parseFloat(
+            document.getElementById("savings-input").value
+          );
+          state.savingsGoal = newGoal;
+          document.getElementById("savings-goal").textContent =
+            formatCurrency(newGoal);
+          updateUI();
+          saveToLocalStorage();
+          closeSavingsModal();
+          showNotification("Savings goal updated successfully!");
+        }
+
+        function openAllTransactionsModal() {
+          // Reset search field
+          document.getElementById("transaction-search").value = "";
+
+          // Set filtered transactions to all expenses
+          state.filteredTransactions = [...state.expenses];
+
+          // Update transactions table
+          updateAllTransactionsTable();
+
+          // Show modal
+          document
+            .getElementById("all-transactions-modal")
+            .classList.remove("hidden");
+        }
+
+        function closeAllTransactionsModal() {
+          document
+            .getElementById("all-transactions-modal")
+            .classList.add("hidden");
+        }
+
+        function updateAllTransactionsTable() {
+          const tableBody = document.getElementById("all-transactions-body");
+          const noTransactionsMessage = document.getElementById(
+            "no-transactions-message"
+          );
+
+          // Clear table
+          tableBody.innerHTML = "";
+
+          if (state.filteredTransactions.length === 0) {
+            noTransactionsMessage.classList.remove("hidden");
+            return;
+          }
+
+          noTransactionsMessage.classList.add("hidden");
+
+          // Add transactions to table
+          state.filteredTransactions.forEach((expense) => {
+            const categoryColor =
+              state.categoryColors[expense.category] ||
+              state.categoryColors.other;
+            const date = new Date(expense.date).toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            });
+
+            const row = document.createElement("tr");
+            row.className = "transaction-row";
+            row.innerHTML = `
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-white">${date}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">${expense.description}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">${
+                          expense.description
+                        }</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 py-1 text-xs font-medium rounded-full" style="background-color: ${categoryColor.bg.replace('0.8', '0.2')}; color: ${categoryColor.color}">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full" style="background-color: ${categoryColor.bg.replace(
+                              "0.8",
+                              "0.2"
+                            )}; color: ${categoryColor.color}">
                                 ${getCategoryName(expense.category)}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-500">-${formatCurrency(expense.amount)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-500">-${formatCurrency(
+                          expense.amount
+                        )}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="action-button text-indigo-600 hover:text-indigo-900 mr-3" onclick="editTransaction(${expense.id})">
+                            <button class="action-button text-indigo-600 hover:text-indigo-900 mr-3" onclick="editTransaction(${
+                              expense.id
+                            })">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                             </button>
-                            <button class="action-button text-red-600 hover:text-red-900" onclick="confirmDeleteTransaction(${expense.id})">
+                            <button class="action-button text-red-600 hover:text-red-900" onclick="confirmDeleteTransaction(${
+                              expense.id
+                            })">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
                             </button>
                         </td>
                     `;
-                    
-                    tableBody.appendChild(row);
-                });
-            }
 
-            function searchTransactions(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                
-                if (searchTerm === '') {
-                    state.filteredTransactions = [...state.expenses];
-                } else {
-                    state.filteredTransactions = state.expenses.filter(expense => {
-                        return expense.description.toLowerCase().includes(searchTerm) || 
-                               getCategoryName(expense.category).toLowerCase().includes(searchTerm) ||
-                               expense.date.includes(searchTerm) ||
-                               expense.amount.toString().includes(searchTerm);
-                    });
-                }
-                
-                updateAllTransactionsTable();
-            }
+            tableBody.appendChild(row);
+          });
+        }
 
-            // Make these functions available globally for the onclick handlers
-            window.editTransaction = function(id) {
-                const expense = state.expenses.find(exp => exp.id === id);
-                if (!expense) return;
-                
-                // Fill form with expense data
-                document.getElementById('edit-transaction-id').value = expense.id;
-                document.getElementById('edit-description').value = expense.description;
-                document.getElementById('edit-amount').value = expense.amount;
-                document.getElementById('edit-category').value = expense.category;
-                document.getElementById('edit-date').value = expense.date;
-                
-                // Show modal
-                document.getElementById('edit-transaction-modal').classList.remove('hidden');
+        function searchTransactions(e) {
+          const searchTerm = e.target.value.toLowerCase();
+
+          if (searchTerm === "") {
+            state.filteredTransactions = [...state.expenses];
+          } else {
+            state.filteredTransactions = state.expenses.filter((expense) => {
+              return (
+                expense.description.toLowerCase().includes(searchTerm) ||
+                getCategoryName(expense.category)
+                  .toLowerCase()
+                  .includes(searchTerm) ||
+                expense.date.includes(searchTerm) ||
+                expense.amount.toString().includes(searchTerm)
+              );
+            });
+          }
+
+          updateAllTransactionsTable();
+        }
+
+        // Make these functions available globally for the onclick handlers
+        window.editTransaction = function (id) {
+          const expense = state.expenses.find((exp) => exp.id === id);
+          if (!expense) return;
+
+          // Fill form with expense data
+          document.getElementById("edit-transaction-id").value = expense.id;
+          document.getElementById("edit-description").value =
+            expense.description;
+          document.getElementById("edit-amount").value = expense.amount;
+          document.getElementById("edit-category").value = expense.category;
+          document.getElementById("edit-date").value = expense.date;
+
+          // Show modal
+          document
+            .getElementById("edit-transaction-modal")
+            .classList.remove("hidden");
+        };
+
+        window.confirmDeleteTransaction = function (id) {
+          document.getElementById("delete-transaction-id").value = id;
+          document
+            .getElementById("delete-confirmation-modal")
+            .classList.remove("hidden");
+        };
+
+        function saveEditedTransaction(e) {
+          e.preventDefault();
+
+          const id = parseInt(
+            document.getElementById("edit-transaction-id").value
+          );
+          const description = document.getElementById("edit-description").value;
+          const amount = parseFloat(
+            document.getElementById("edit-amount").value
+          );
+          const category = document.getElementById("edit-category").value;
+          const date = document.getElementById("edit-date").value;
+
+          // Find and update expense
+          const expenseIndex = state.expenses.findIndex((exp) => exp.id === id);
+          if (expenseIndex !== -1) {
+            state.expenses[expenseIndex] = {
+              ...state.expenses[expenseIndex],
+              description,
+              amount,
+              category,
+              date,
+              timestamp: new Date(date).getTime(),
             };
 
-            window.confirmDeleteTransaction = function(id) {
-                document.getElementById('delete-transaction-id').value = id;
-                document.getElementById('delete-confirmation-modal').classList.remove('hidden');
-            };
+            // Sort expenses by date (newest first)
+            state.expenses.sort((a, b) => b.timestamp - a.timestamp);
 
-            function saveEditedTransaction(e) {
-                e.preventDefault();
-                
-                const id = parseInt(document.getElementById('edit-transaction-id').value);
-                const description = document.getElementById('edit-description').value;
-                const amount = parseFloat(document.getElementById('edit-amount').value);
-                const category = document.getElementById('edit-category').value;
-                const date = document.getElementById('edit-date').value;
-                
-                // Find and update expense
-                const expenseIndex = state.expenses.findIndex(exp => exp.id === id);
-                if (expenseIndex !== -1) {
-                    state.expenses[expenseIndex] = {
-                        ...state.expenses[expenseIndex],
-                        description,
-                        amount,
-                        category,
-                        date,
-                        timestamp: new Date(date).getTime()
-                    };
-                    
-                    // Sort expenses by date (newest first)
-                    state.expenses.sort((a, b) => b.timestamp - a.timestamp);
-                    
-                    // Update filtered transactions
-                    state.filteredTransactions = [...state.expenses];
-                    
-                    // Update UI
-                    updateUI();
-                    updateAllTransactionsTable();
-                    
-                    // Save to localStorage
-                    saveToLocalStorage();
-                    
-                    // Show success message
-                    showNotification('Transaction updated successfully!');
-                }
-                
-                // Close modal
-                closeEditTransactionModal();
-            }
+            // Update filtered transactions
+            state.filteredTransactions = [...state.expenses];
 
-            function closeEditTransactionModal() {
-                document.getElementById('edit-transaction-modal').classList.add('hidden');
-            }
+            // Update UI
+            updateUI();
+            updateAllTransactionsTable();
 
-            function deleteTransaction() {
-                const id = parseInt(document.getElementById('delete-transaction-id').value);
-                
-                // Remove expense
-                state.expenses = state.expenses.filter(exp => exp.id !== id);
-                
-                // Update filtered transactions
-                state.filteredTransactions = [...state.expenses];
-                
-                // Update UI
-                updateUI();
-                updateAllTransactionsTable();
-                
-                // Save to localStorage
-                saveToLocalStorage();
-                
-                // Show success message
-                showNotification('Transaction deleted successfully!');
-                
-                // Close modal
-                closeDeleteConfirmationModal();
-            }
+            // Save to localStorage
+            saveToLocalStorage();
 
-            function closeDeleteConfirmationModal() {
-                document.getElementById('delete-confirmation-modal').classList.add('hidden');
-            }
+            // Show success message
+            showNotification("Transaction updated successfully!");
+          }
 
-            function getCategoryName(category) {
-                const categoryNames = {
-                    food: 'Food & Dining',
-                    transportation: 'Transportation',
-                    entertainment: 'Entertainment',
-                    utilities: 'Utilities',
-                    shopping: 'Shopping',
-                    health: 'Health',
-                    other: 'Other'
-                };
-                
-                return categoryNames[category] || 'Other';
-            }
+          // Close modal
+          closeEditTransactionModal();
+        }
 
-            function formatCurrency(amount) {
-                return new Intl.NumberFormat('en-PH', {
-                    style: 'currency',
-                    currency: 'PHP',
-                    minimumFractionDigits: 2
-                }).format(amount);
-            }
+        function closeEditTransactionModal() {
+          document
+            .getElementById("edit-transaction-modal")
+            .classList.add("hidden");
+        }
 
-            function saveToLocalStorage() {
-                const data = {
-                    darkMode: state.darkMode,
-                    budget: state.budget,
-                    savingsGoal: state.savingsGoal,
-                    expenses: state.expenses,
-                    savings: state.savings
-                };
-                
-                localStorage.setItem('budgetTrackerData', JSON.stringify(data));
-            }
+        function deleteTransaction() {
+          const id = parseInt(
+            document.getElementById("delete-transaction-id").value
+          );
 
-            function loadFromLocalStorage() {
-                // Load dark mode preference
-                const darkMode = localStorage.getItem('budgetTrackerDarkMode');
-                if (darkMode !== null) {
-                    state.darkMode = darkMode === 'true';
-                    document.body.classList.toggle('dark-mode', state.darkMode);
-                    document.getElementById('moon-icon').classList.toggle('hidden', state.darkMode);
-                    document.getElementById('sun-icon').classList.toggle('hidden', !state.darkMode);
-                }
-                
-                // Load budget data
-                const data = localStorage.getItem('budgetTrackerData');
-                if (data) {
-                    const parsedData = JSON.parse(data);
-                    state.budget = parsedData.budget || 2500.00;
-                    state.savingsGoal = parsedData.savingsGoal || 500.00;
-                    state.expenses = parsedData.expenses || [];
-                    state.savings = parsedData.savings || 0;
-                    
-                    // Update display
-                    document.getElementById('budget-amount').textContent = formatCurrency(state.budget);
-                    document.getElementById('savings-goal').textContent = formatCurrency(state.savingsGoal);
-                }
-            }
-        });
+          // Remove expense
+          state.expenses = state.expenses.filter((exp) => exp.id !== id);
+
+          // Update filtered transactions
+          state.filteredTransactions = [...state.expenses];
+
+          // Update UI
+          updateUI();
+          updateAllTransactionsTable();
+
+          // Save to localStorage
+          saveToLocalStorage();
+
+          // Show success message
+          showNotification("Transaction deleted successfully!");
+
+          // Close modal
+          closeDeleteConfirmationModal();
+        }
+
+        function closeDeleteConfirmationModal() {
+          document
+            .getElementById("delete-confirmation-modal")
+            .classList.add("hidden");
+        }
+
+        function getCategoryName(category) {
+          const categoryNames = {
+            food: "Food & Dining",
+            transportation: "Transportation",
+            entertainment: "Entertainment",
+            utilities: "Utilities",
+            shopping: "Shopping",
+            health: "Health",
+            other: "Other",
+          };
+
+          return categoryNames[category] || "Other";
+        }
+
+        function formatCurrency(amount) {
+          return new Intl.NumberFormat("en-PH", {
+            style: "currency",
+            currency: "PHP",
+            minimumFractionDigits: 2,
+          }).format(amount);
+        }
+
+        function saveToLocalStorage() {
+          const data = {
+            darkMode: state.darkMode,
+            budget: state.budget,
+            savingsGoal: state.savingsGoal,
+            expenses: state.expenses,
+            savings: state.savings,
+          };
+
+          localStorage.setItem("budgetTrackerData", JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+          // Load dark mode preference
+          const darkMode = localStorage.getItem("budgetTrackerDarkMode");
+          if (darkMode !== null) {
+            state.darkMode = darkMode === "true";
+            document.body.classList.toggle("dark-mode", state.darkMode);
+            document
+              .getElementById("moon-icon")
+              .classList.toggle("hidden", state.darkMode);
+            document
+              .getElementById("sun-icon")
+              .classList.toggle("hidden", !state.darkMode);
+          }
+
+          // Load budget data
+          const data = localStorage.getItem("budgetTrackerData");
+          if (data) {
+            const parsedData = JSON.parse(data);
+            state.budget = parsedData.budget || 2500.0;
+            state.savingsGoal = parsedData.savingsGoal || 500.0;
+            state.expenses = parsedData.expenses || [];
+            state.savings = parsedData.savings || 0;
+
+            // Update display
+            document.getElementById("budget-amount").textContent =
+              formatCurrency(state.budget);
+            document.getElementById("savings-goal").textContent =
+              formatCurrency(state.savingsGoal);
+          }
+        }
+      });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9457c1094587febc',t:'MTc0ODIwNDY0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script> <script src="js/main.js"></script>
-</body>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'9457c1094587febc',t:'MTc0ODIwNDY0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
 </html>
