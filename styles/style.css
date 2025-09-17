@@ -1,46 +1,46 @@
 body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9ff;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        body.dark-mode {
-            background-color: #111827;
-            color: #f3f4f6;
-        }
-        body.dark-mode .bg-white {
-            background-color: #1f2937;
-            color: #f3f4f6;
-        }
-        body.dark-mode .text-gray-500 {
-            color: #9ca3af;
-        }
-        body.dark-mode .text-gray-700 {
-            color: #d1d5db;
-        }
-        body.dark-mode .border-gray-300 {
-            border-color: #374151;
-        }
-        body.dark-mode .bg-gray-50 {
-            background-color: #2d3748;
-        }
-        body.dark-mode .bg-gray-100 {
-            background-color: #374151;
-        }
-        body.dark-mode .text-gray-600 {
-            color: #e5e7eb;
-        }
-        body.dark-mode .border-t {
-            border-color: #374151;
-        }
-        body.dark-mode input, 
-        body.dark-mode select {
-            background-color: #374151;
-            color: #f3f4f6;
-            border-color: #4b5563;
-        }
-        body.dark-mode input::placeholder {
-            color: #9ca3af;
-        }
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9ff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+body.dark-mode {
+    background-color: #111827;
+    color: #f3f4f6;
+}
+body.dark-mode .bg-white {
+    background-color: #1f2937;
+    color: #f3f4f6;
+}
+body.dark-mode .text-gray-500 {
+    color: #9ca3af;
+}
+body.dark-mode .text-gray-700 {
+    color: #d1d5db;
+}
+body.dark-mode .border-gray-300 {
+    border-color: #374151;
+}
+body.dark-mode .bg-gray-50 {
+    background-color: #2d3748;
+}
+body.dark-mode .bg-gray-100 {
+    background-color: #374151;
+}
+body.dark-mode .text-gray-600 {
+    color: #e5e7eb;
+}
+body.dark-mode .border-t {
+    border-color: #374151;
+}
+body.dark-mode input, 
+body.dark-mode select {
+    background-color: #374151;
+    color: #f3f4f6;
+    border-color: #4b5563;
+}
+body.dark-mode input::placeholder {
+    color: #9ca3af;
+}
         .gradient-bg {
             background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
         }
