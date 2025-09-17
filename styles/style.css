@@ -41,62 +41,62 @@ body.dark-mode select {
 body.dark-mode input::placeholder {
     color: #9ca3af;
 }
-        .gradient-bg {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-        }
-        body.dark-mode .gradient-bg {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-        }
-        .card {
-            transition: all 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.15);
-        }
-        body.dark-mode .card:hover {
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25);
-        }
-        .btn-gradient {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            transition: all 0.3s ease;
-        }
-        .btn-gradient:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-        .category-pill {
-            transition: all 0.2s ease;
-        }
-        .category-pill:hover {
-            transform: scale(1.05);
-        }
-        .editable-field {
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .editable-field:hover {
-            background-color: rgba(99, 102, 241, 0.1);
-            border-radius: 0.25rem;
-        }
-        body.dark-mode .editable-field:hover {
-            background-color: rgba(99, 102, 241, 0.2);
-        }
-        .transaction-row {
-            transition: all 0.2s ease;
-        }
-        .transaction-row:hover {
-            background-color: rgba(99, 102, 241, 0.05);
-        }
-        body.dark-mode .transaction-row:hover {
-            background-color: rgba(99, 102, 241, 0.1);
-        }
-        .action-button {
-            transition: all 0.2s ease;
-        }
-        .action-button:hover {
-            transform: scale(1.1);
-        }
-        .modal-overlay {
-            backdrop-filter: blur(4px);
-        }
+.gradient-bg {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+body.dark-mode .gradient-bg {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+}
+.card {
+    transition: all 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.15);
+}
+body.dark-mode .card:hover {
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25);
+}
+.btn-gradient {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    transition: all 0.3s ease;
+}
+.btn-gradient:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+.category-pill {
+    transition: all 0.2s ease;
+}
+.category-pill:hover {
+    transform: scale(1.05);
+}
+.editable-field {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.editable-field:hover {
+    background-color: rgba(99, 102, 241, 0.1);
+    border-radius: 0.25rem;
+}
+body.dark-mode .editable-field:hover {
+    background-color: rgba(99, 102, 241, 0.2);
+}
+.transaction-row {
+    transition: all 0.2s ease;
+}
+.transaction-row:hover {
+    background-color: rgba(99, 102, 241, 0.05);
+}
+body.dark-mode .transaction-row:hover {
+    background-color: rgba(99, 102, 241, 0.1);
+}
+.action-button {
+    transition: all 0.2s ease;
+}
+.action-button:hover {
+    transform: scale(1.1);
+}
+.modal-overlay {
+    backdrop-filter: blur(4px);
+}
