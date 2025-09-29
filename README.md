@@ -291,6 +291,10 @@ CDN scripts are loaded directly in the `<head>`:
 * **Wrong currency** → Currently locked to PHP; change in `formatCurrency()` helper if needed.
 * **Dark mode not remembered** → Verify `budgetTrackerDarkMode` exists in Application Storage.
 
+--- 
+
+## 📁 Project Documentation
+
 ### 📄 Requirements Gathering Document
 
 This document outlines the initial phase of the project, detailing stakeholder requirements, functional and non-functional specifications, and the final approval log for the **Budget Tracker** project.
