@@ -300,6 +300,7 @@ This document outlines the initial phase of the project, detailing stakeholder r
     <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/document/d/1etwZgnCslsuRYfLSjMoCElXrALwSjlutLBiek4C9B3A/edit?usp=sharing" alt="Requirements Gathering QR Code" width="200"/>
   </a>
 </p>
+
 ---
 
 ### ✏️ Wireframe Justification and Design Decisions
@@ -307,13 +308,9 @@ This document outlines the initial phase of the project, detailing stakeholder r
 This document provides the rationale behind the project's UI/UX design, justifying the wireframe choices based on **Human-Computer Interaction (HCI)** principles, technical feasibility, and user experience goals.
 
 <p align="center">
-    **[File: MO-IT161\_H3101\_Group 6\_Wireframe Justification.docx (Attached)]**
-</p>
-
-<p align="center">
-  <a href="https://docs.google.com/document/d/1D0Vepv_MbIJjhRpgWafzE2IFRNDJ-oYc3sXP5bd1Wzw/edit?usp=sharing)" target="_blank">
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/spreadsheets/d/1F3L0Za7bEWXZnBvyUVt2QsKkvnZ3Y8Q8ryHLwzJaAoU/edit?usp=sharing" alt="Homework 7 QR Code" width="200"/>
-  </a>
+  <a href="https://docs.google.com/document/d/1D0Vepv_MbIJjhRpgWafzE2IFRNDJ-oYc3sXP5bd1Wzw/edit?usp=sharing" target="_blank">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/document/d/1D0Vepv_MbIJjhRpgWafzE2IFRNDJ-oYc3sXP5bd1Wzw/edit?usp=sharing" alt="Wireframe Justification QR Code" width="200"/>
+  </a>
 </p>
 
 ---
@@ -323,5 +320,7 @@ This document provides the rationale behind the project's UI/UX design, justifyi
 This spreadsheet contains the complete project timeline, including the phased breakdown of activities, task durations, assigned team members, and overall schedule for the **Budget Tracker** project.
 
 <p align="center">
-    **[File: MO-IT161 \_ Project Plan \_ H3101 Group 6.xlsx - Gantt Chart.csv (Attached)]**
+  <a href="https://docs.google.com/spreadsheets/d/1bwFmgUFChvp5VOA9_AfjprGblmZr6pWFwGl-YBRpSB8/edit?usp=sharing" target="_blank">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/spreadsheets/d/1bwFmgUFChvp5VOA9_AfjprGblmZr6pWFwGl-YBRpSB8/edit?usp=sharing" alt="Project Plan QR Code" width="200"/>
+  </a>
 </p>
