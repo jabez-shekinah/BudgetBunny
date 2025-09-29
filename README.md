@@ -294,7 +294,6 @@ CDN scripts are loaded directly in the `<head>`:
 --- 
 
 ## 📁 Project Documentation
-
 ---
 
 ### 📄 Requirements Gathering Document
