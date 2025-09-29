@@ -296,9 +296,10 @@ CDN scripts are loaded directly in the `<head>`:
 This document outlines the initial phase of the project, detailing stakeholder requirements, functional and non-functional specifications, and the final approval log for the **Budget Tracker** project.
 
 <p align="center">
-    **[File: MO-IT161\_H3101\_Group 6\_Requirements Gathering.docx (Attached)]**
+  <a href="https://docs.google.com/document/d/1etwZgnCslsuRYfLSjMoCElXrALwSjlutLBiek4C9B3A/edit?usp=sharing" target="_blank">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/document/d/1etwZgnCslsuRYfLSjMoCElXrALwSjlutLBiek4C9B3A/edit?usp=sharing" alt="Requirements Gathering QR Code" width="200"/>
+  </a>
 </p>
-
 ---
 
 ### ✏️ Wireframe Justification and Design Decisions
@@ -307,6 +308,12 @@ This document provides the rationale behind the project's UI/UX design, justifyi
 
 <p align="center">
     **[File: MO-IT161\_H3101\_Group 6\_Wireframe Justification.docx (Attached)]**
+</p>
+
+<p align="center">
+  <a href="https://docs.google.com/document/d/1D0Vepv_MbIJjhRpgWafzE2IFRNDJ-oYc3sXP5bd1Wzw/edit?usp=sharing)" target="_blank">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/spreadsheets/d/1F3L0Za7bEWXZnBvyUVt2QsKkvnZ3Y8Q8ryHLwzJaAoU/edit?usp=sharing" alt="Homework 7 QR Code" width="200"/>
+  </a>
 </p>
 
 ---
