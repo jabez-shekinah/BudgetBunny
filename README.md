@@ -290,3 +290,31 @@ CDN scripts are loaded directly in the `<head>`:
 * **Charts look blank** → Add at least one expense or switch the **Week/Month/Year** toggle. Check console for errors if CDNs failed to load.
 * **Wrong currency** → Currently locked to PHP; change in `formatCurrency()` helper if needed.
 * **Dark mode not remembered** → Verify `budgetTrackerDarkMode` exists in Application Storage.
+
+### 📄 Requirements Gathering Document
+
+This document outlines the initial phase of the project, detailing stakeholder requirements, functional and non-functional specifications, and the final approval log for the **Budget Tracker** project.
+
+<p align="center">
+    **[File: MO-IT161\_H3101\_Group 6\_Requirements Gathering.docx (Attached)]**
+</p>
+
+---
+
+### ✏️ Wireframe Justification and Design Decisions
+
+This document provides the rationale behind the project's UI/UX design, justifying the wireframe choices based on **Human-Computer Interaction (HCI)** principles, technical feasibility, and user experience goals.
+
+<p align="center">
+    **[File: MO-IT161\_H3101\_Group 6\_Wireframe Justification.docx (Attached)]**
+</p>
+
+---
+
+### 📅 Project Plan and Gantt Chart
+
+This spreadsheet contains the complete project timeline, including the phased breakdown of activities, task durations, assigned team members, and overall schedule for the **Budget Tracker** project.
+
+<p align="center">
+    **[File: MO-IT161 \_ Project Plan \_ H3101 Group 6.xlsx - Gantt Chart.csv (Attached)]**
+</p>
