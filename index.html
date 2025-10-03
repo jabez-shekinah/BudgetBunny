@@ -4,7 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BudgetTracker</title>
-    <link rel="icon" type="image/png" href="icon.png" />
+    <link rel="icon" type="image/png" href="images/icon.png" />
+    <!-- Tailwind config: use class strategy for dark mode -->
+    <script>
+      tailwind.config = { darkMode: "class" };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -14,7 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="styles/style.css" />
   </head>
-  <body>
+  <body class="app">
     <div class="min-h-screen flex flex-col">
       <!-- Header -->
       <header class="gradient-bg text-white p-6 shadow-lg">
@@ -29,7 +34,7 @@
               aria-label="Toggle light and dark theme"
             >
               <svg
-                id="moon-icon" 
+                id="moon-icon"
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
                 fill="none"
@@ -47,7 +52,7 @@
                 />
               </svg>
               <svg
-                id="sun-icon" 
+                id="sun-icon"
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5 hidden"
                 fill="none"
@@ -145,7 +150,9 @@
                     role="img"
                     aria-labelledby="budget-change-icon-title"
                   >
-                    <title id="budget-change-icon-title">Budget Change Icon</title>
+                    <title id="budget-change-icon-title">
+                      Budget Change Icon
+                    </title>
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
@@ -197,7 +204,9 @@
                     role="img"
                     aria-labelledby="expenses-change-icon-title"
                   >
-                    <title id="expenses-change-icon-title">Expenses Change Icon</title>
+                    <title id="expenses-change-icon-title">
+                      Expenses Change Icon
+                    </title>
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
@@ -298,7 +307,9 @@
                     role="img"
                     aria-labelledby="edit-savings-icon-title"
                   >
-                    <title id="edit-savings-icon-title">Edit Savings Goal Icon</title>
+                    <title id="edit-savings-icon-title">
+                      Edit Savings Goal Icon
+                    </title>
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
@@ -373,7 +384,9 @@
                     role="img"
                     aria-labelledby="view-all-icon-title"
                   >
-                    <title id="view-all-icon-title">View All Transactions Icon</title>
+                    <title id="view-all-icon-title">
+                      View All Transactions Icon
+                    </title>
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
@@ -830,7 +843,7 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-         // Initialize state object for app data and settings
+        // Initialize state object for app data and settings
         const state = {
           darkMode: false, // Tracks dark mode status
           budget: 2500.0,
@@ -963,9 +976,13 @@
 
         function toggleDarkMode() {
           state.darkMode = !state.darkMode;
+
+          document.body.classList.toggle("app--dark", state.darkMode);
+
           document.body.classList.toggle("dark-mode", state.darkMode);
 
-          // Toggle moon/sun icons
+          document.documentElement.classList.toggle("dark", state.darkMode);
+
           document
             .getElementById("moon-icon")
             .classList.toggle("hidden", state.darkMode);
@@ -973,10 +990,8 @@
             .getElementById("sun-icon")
             .classList.toggle("hidden", !state.darkMode);
 
-          // Update charts for dark mode
           updateChartsTheme();
 
-          // Save preference to localStorage
           localStorage.setItem("budgetTrackerDarkMode", state.darkMode);
         }
 
@@ -1787,10 +1802,17 @@
 
         function loadFromLocalStorage() {
           // Load dark mode preference
+          // Load dark mode preference
           const darkMode = localStorage.getItem("budgetTrackerDarkMode");
           if (darkMode !== null) {
             state.darkMode = darkMode === "true";
-            document.body.classList.toggle("dark-mode", state.darkMode);
+
+            // Apply classes on load
+            document.body.classList.toggle("app--dark", state.darkMode);
+            document.body.classList.toggle("dark-mode", state.darkMode); // back-compat
+            document.documentElement.classList.toggle("dark", state.darkMode);
+
+            // Icons to match
             document
               .getElementById("moon-icon")
               .classList.toggle("hidden", state.darkMode);
