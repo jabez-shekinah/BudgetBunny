@@ -9,11 +9,57 @@ body.dark-mode {
   color: #f3f4f6;
 }
 
+/* ===== HEADER ===== */
+/* Container styles for header */
+.header__gradient-bg {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+body.dark-mode .header__gradient-bg {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+}
+/* .header__title styles removed because the ruleset was empty */
+/* .header__actions ruleset removed because it was empty */
+
+/* ===== CARD ===== */
+.card {
+  transition: all 0.3s ease;
+}
+.card:hover,
+.card__main:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.15);
+}
+body.dark-mode .card:hover,
+.card__main--dark:hover {
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25);
+}
+/* Main card block styles for .card__main can be added here if needed */
+/* Card title styles can be added here if needed */
+/* Card content styles can be added here if needed */
+/* Card footer styles can be added here if needed */
+
+/* ===== BUTTONS ===== */
+.button {
+  transition: all 0.2s ease;
+}
+.button--gradient {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  transition: all 0.3s ease;
+}
+.button--gradient:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+/* .button--action ruleset removed because it was empty */
+.button--action:hover {
+  transform: scale(1.1);
+}
+
+/* ===== LEGACY/OTHER STYLES (for compatibility) ===== */
 body.dark-mode .bg-white {
   background-color: #1f2937;
   color: #f3f4f6;
 }
-
 body.dark-mode .text-gray-500 {
   color: #9ca3af;
 }
@@ -47,37 +93,6 @@ body.dark-mode input::placeholder {
   color: #9ca3af;
 }
 
-.gradient-bg {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-}
-
-body.dark-mode .gradient-bg {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-}
-
-.card {
-  transition: all 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.15);
-}
-
-body.dark-mode .card:hover {
-  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25);
-}
-
-.btn-gradient {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  transition: all 0.3s ease;
-}
-
-.btn-gradient:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
-
 .category-pill {
   transition: all 0.2s ease;
 }
@@ -89,12 +104,10 @@ body.dark-mode .card:hover {
   cursor: pointer;
   transition: all 0.2s ease;
 }
-
 .editable-field:hover {
   background-color: rgba(99, 102, 241, 0.1);
   border-radius: 0.25rem;
 }
-
 body.dark-mode .editable-field:hover {
   background-color: rgba(99, 102, 241, 0.2);
 }
@@ -102,20 +115,11 @@ body.dark-mode .editable-field:hover {
 .transaction-row {
   transition: all 0.2s ease;
 }
-
 .transaction-row:hover {
   background-color: rgba(99, 102, 241, 0.05);
 }
-
 body.dark-mode .transaction-row:hover {
   background-color: rgba(99, 102, 241, 0.1);
-}
-
-.action-button {
-  transition: all 0.2s ease;
-}
-.action-button:hover {
-  transform: scale(1.1);
 }
 
 .modal-overlay {
