@@ -1,8 +1,27 @@
+/* Better text selection colors (works across the app) */
+::selection {
+  background: rgba(99, 102, 241, 0.25); /* indigo */
+  color: #111827; /* gray-900 */
+}
+::-moz-selection {
+  background: rgba(99, 102, 241, 0.25);
+  color: #111827;
+}
+
 /* ========== APP / DARK MODE (Block: app) ========== */
 body {
   font-family: "Poppins", sans-serif;
   background-color: #f8f9ff;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.app--dark ::selection {
+  background: rgba(99, 102, 241, 0.35);
+  color: #ffffff;
+}
+body.app--dark ::-moz-selection {
+  background: rgba(99, 102, 241, 0.35);
+  color: #ffffff;
 }
 
 /* Add class="app" to <body>. Toggle dark with app--dark */
@@ -165,4 +184,13 @@ body.app--dark .transaction__row:hover {
 .modal-overlay,
 .modal__overlay {
   backdrop-filter: blur(4px);
+}
+
+input::selection,
+textarea::selection {
+  background: rgba(99, 102, 241, 0.35);
+}
+body.app--dark input::selection,
+body.app--dark textarea::selection {
+  background: rgba(99, 102, 241, 0.45);
 }
