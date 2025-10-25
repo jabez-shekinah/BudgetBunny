@@ -54,17 +54,25 @@ All logic runs entirely in the browser — **no backend or database required**.
 Simply open the HTML file in your browser — no build tools needed.
 
 ```plaintext
-budget-tracker/
-├─ index.html
-├─ js/
-│  ├─ main.js
-│  ├─ state.js
-│  ├─ ui.js
+BudgetTrackerWebsite/
+├─ .vscode/
+│  └─ settings.json
+├─ images/
+├─ json/
+│  ├─ .eslintrc.json
+│  └─ .prettierrc.json
+├─ scripts/
 │  ├─ charts.js
+│  ├─ main.js
+│  ├─ modals.js
 │  ├─ safe.js
-│  └─ storage.js
-└─ css/
-   └─ styles.css
+│  ├─ state.js
+│  ├─ storage.js
+│  └─ ui.js
+├─ styles/
+│  └─ style.css
+├─ index.html
+└─ README.md
 ```
 
 Optionally, host the app using GitHub Pages, Vercel, or Netlify for live access.
@@ -154,14 +162,18 @@ Your theme preference is saved automatically.
 
 This app follows a modular ES6 structure for readability and scalability.
 
-| File         | Purpose                             |
-| ------------ | ----------------------------------- |
-| `state.js`   | Central state and helper functions  |
-| `ui.js`      | UI rendering and notification logic |
-| `charts.js`  | Chart.js setup and updates          |
-| `safe.js`    | Safe rendering wrapper              |
-| `storage.js` | LocalStorage CRUD, import/export    |
-| `main.js`    | Event listeners and initialization  |
+| File                    | Purpose                             |
+| ----------------------- | ----------------------------------- |
+| `scripts/state.js`      | Central state and helper functions  |
+| `scripts/ui.js`         | UI rendering and notification logic |
+| `scripts/charts.js`     | Chart.js setup and updates          |
+| `scripts/safe.js`       | Safe rendering wrapper              |
+| `scripts/storage.js`    | LocalStorage CRUD, import/export    |
+| `scripts/modals.js`     | Modal dialog management             |
+| `scripts/main.js`       | Event listeners and initialization  |
+| `styles/style.css`      | Custom styling                      |
+| `json/.eslintrc.json`   | ESLint configuration                |
+| `json/.prettierrc.json` | Prettier configuration              |
 
 ---
 
