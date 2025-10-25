@@ -1,3 +1,7 @@
 {
-    "livePreview.defaultPreviewPath": "/index.html"
+  "livePreview.defaultPreviewPath": "/index.html",
+  "eslint.options": {
+    "configFile": "${workspaceFolder}/json/.eslintrc.json"
+  },
+  "prettier.configPath": "json/.prettierrc.json"
 }

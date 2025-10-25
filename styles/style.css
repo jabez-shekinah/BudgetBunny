@@ -1,36 +1,43 @@
-/* Better text selection colors (works across the app) */
+/* =========================
+   GLOBAL / SELECTION
+========================= */
 ::selection {
-  background: rgba(99, 102, 241, 0.25); /* indigo */
-  color: #111827; /* gray-900 */
+  background: rgba(99, 102, 241, 0.25);
+  color: #111827;
 }
 ::-moz-selection {
   background: rgba(99, 102, 241, 0.25);
   color: #111827;
 }
 
-/* ========== APP / DARK MODE (Block: app) ========== */
-body {
+input::selection,
+textarea::selection {
+  background: rgba(99, 102, 241, 0.35);
+}
+body.app--dark input::selection,
+body.app--dark textarea::selection {
+  background: rgba(99, 102, 241, 0.45);
+}
+
+/* =========================
+   APP BLOCK
+   .app (body)
+   .app--dark (modifier)
+========================= */
+
+body.app {
   font-family: "Poppins", sans-serif;
   background-color: #f8f9ff;
   transition: background-color 0.3s ease, color 0.3s ease;
+  color: #111827;
 }
 
-body.app--dark ::selection {
-  background: rgba(99, 102, 241, 0.35);
-  color: #ffffff;
-}
-body.app--dark ::-moz-selection {
-  background: rgba(99, 102, 241, 0.35);
-  color: #ffffff;
-}
-
-/* Add class="app" to <body>. Toggle dark with app--dark */
 body.app--dark {
   background-color: #111827;
   color: #f3f4f6;
 }
 
-/* Utilities that change in dark mode (keep your existing utility classes) */
+/* Dark theme utility overrides */
 body.app--dark .bg-white,
 body.app--dark .u-bg-white {
   background-color: #1f2937;
@@ -72,125 +79,263 @@ body.app--dark .u-border-t {
   border-color: #374151;
 }
 
-body.app--dark input,
-body.app--dark select {
+/* Inputs in dark mode */
+body.app--dark .form__input {
   background-color: #374151;
   color: #f3f4f6;
   border-color: #4b5563;
 }
 
-body.app--dark input::placeholder {
+body.app--dark .form__input::placeholder {
   color: #9ca3af;
 }
 
-/* ========== LAYOUT BG (Block: layout) ========== */
-.gradient-bg,
-.layout__bg--gradient {
+/* =========================
+   LAYOUT BACKGROUND
+   .layout__bg--gradient
+========================= */
+
+.layout__bg--gradient,
+.gradient-bg {
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
 }
 
-body.app--dark .gradient-bg,
-body.app--dark .layout__bg--gradient {
+body.app--dark .layout__bg--gradient,
+body.app--dark .gradient-bg {
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
 }
 
-/* ========== CARD (Block: card) ========== */
-.card,
-.app__card {
+/* =========================
+   CARD BLOCK
+   .card
+========================= */
+
+.card {
   transition: all 0.3s ease;
 }
 
-.card:hover,
-.app__card:hover {
+.card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(99, 102, 241, 0.15);
 }
 
-body.app--dark .card:hover,
-body.app--dark .app__card:hover {
+body.app--dark .card:hover {
   box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25);
 }
 
-/* ========== BUTTON (Block: button) ========== */
-.btn-gradient,
-.button--gradient {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  transition: all 0.3s ease;
+/* =========================
+   BUTTON BLOCK
+   .button
+   .button--gradient
+   .button--danger
+========================= */
+
+.button {
+  transition: all 0.2s ease;
 }
 
-.btn-gradient:hover,
-.button--gradient:hover {
-  opacity: 0.9;
+.button:hover {
   transform: translateY(-2px);
 }
 
-/* ========== CATEGORY PILL (Block: category) ========== */
-.category-pill,
-.category__pill {
+.button--gradient {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #fff;
+}
+
+.button--danger {
+  background-color: #dc2626;
+  color: #fff;
+}
+.button--danger:hover {
+  background-color: #b91c1c;
+}
+
+/* =========================
+   TRANSACTIONS BLOCK
+========================= */
+
+/* for dashboard recent-transactions list rows (flex cards) */
+.transactions__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
   transition: all 0.2s ease;
 }
 
-.category-pill:hover,
-.category__pill:hover {
-  transform: scale(1.05);
+/* for table rows in All Transactions modal (<tr>) */
+.transactions__row-table {
+  transition: background-color 0.2s ease;
 }
 
-/* ========== EDITABLE FIELD (Block: editable) ========== */
-.editable-field,
-.editable__field {
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.editable-field:hover,
-.editable__field:hover {
-  background-color: rgba(99, 102, 241, 0.1);
-  border-radius: 0.25rem;
-}
-
-body.app--dark .editable-field:hover,
-body.app--dark .editable__field:hover {
-  background-color: rgba(99, 102, 241, 0.2);
-}
-
-/* ========== TRANSACTION (Block: transaction) ========== */
-.transaction-row,
-.transaction__row {
-  transition: all 0.2s ease;
-}
-
-.transaction-row:hover,
-.transaction__row:hover {
+.transactions__row-table:hover {
   background-color: rgba(99, 102, 241, 0.05);
 }
 
-body.app--dark .transaction-row:hover,
-body.app--dark .transaction__row:hover {
+body.app--dark .transactions__row-table:hover {
   background-color: rgba(99, 102, 241, 0.1);
 }
 
-/* ========== ACTION BUTTON (Block: action) ========== */
-.action-button,
-.action__button {
-  transition: all 0.2s ease;
+.transactions__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  margin-right: 1rem;
 }
 
-.action-button:hover,
-.action__button:hover {
+.transactions__desc {
+  display: flex;
+  flex-direction: column;
+}
+
+.transactions__amount {
+  font-weight: 600;
+  color: #ef4444;
+}
+
+.transactions__table {
+  /* future shared table styles */
+}
+
+.transactions__action-btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 0.375rem; /* 6px for focus ring visibility */
+  outline: none;
+}
+.transactions__action-btn:hover {
   transform: scale(1.1);
 }
+.transactions__action-btn:focus-visible {
+  /* keyboard focus ring */
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
+  background-color: rgba(99, 102, 241, 0.08);
+}
+body.app--dark .transactions__action-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.7);
+  background-color: rgba(99, 102, 241, 0.15);
+}
 
-/* ========== MODAL (Block: modal) ========== */
-.modal-overlay,
+/* =========================
+   MODAL BLOCK
+========================= */
+
 .modal__overlay {
   backdrop-filter: blur(4px);
 }
 
-input::selection,
-textarea::selection {
-  background: rgba(99, 102, 241, 0.35);
+.modal__dialog {
+  border-radius: 0.5rem;
 }
-body.app--dark input::selection,
-body.app--dark textarea::selection {
-  background: rgba(99, 102, 241, 0.45);
+
+.modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.modal__title {
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.modal__close {
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+.modal__close:hover {
+  background-color: rgba(156, 163, 175, 0.15);
+}
+
+/* =========================
+   FORM BLOCK
+========================= */
+
+.form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.form__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+body.app--dark .form__label {
+  color: #d1d5db;
+}
+
+.form__input {
+  width: 100%;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  background-color: #ffffff;
+  color: #111827;
+  border-color: #d1d5db;
+  padding: 0.5rem 1rem;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease,
+    background-color 0.2s ease, color 0.2s ease;
+}
+.form__input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
+  border-color: #6366f1;
+}
+
+.form__input--currency {
+  padding-left: 2rem;
+}
+
+.form__input--select {
+  /* hook for selects */
+}
+
+.form__input--date {
+  /* hook for date styling */
+}
+
+/* Dark mode: make calendar icon light, only on .form__input--date */
+body.app--dark .form__input--date::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.8) contrast(1.2);
+  opacity: 0.9;
+  background-color: transparent;
+}
+body.app--dark .form__input--date:hover::-webkit-calendar-picker-indicator,
+body.app--dark .form__input--date:focus::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  filter: invert(1) brightness(2) contrast(1.3);
+  background-color: transparent;
+}
+
+/* Firefox */
+body.app--dark .form__input--date::-moz-calendar-picker-indicator {
+  filter: invert(1) brightness(1.8) contrast(1.2);
+  opacity: 0.9;
+  background-color: transparent;
+}
+body.app--dark .form__input--date:hover::-moz-calendar-picker-indicator,
+body.app--dark .form__input--date:focus::-moz-calendar-picker-indicator {
+  opacity: 1;
+  filter: invert(1) brightness(2) contrast(1.3);
+  background-color: transparent;
+}
+
+.form__submit {
+  width: 100%;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form__submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.45);
 }
