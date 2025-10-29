@@ -1,3 +1,10 @@
 {
-    "livePreview.defaultPreviewPath": "/index.html"
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "eslint.validate": ["javascript"],
+  "livePreview.defaultPreviewPath": "/index.html",
+  "eslint.options": {
+    "configFile": "${workspaceFolder}/json/.eslintrc.json"
+  },
+  "prettier.configPath": "json/.prettierrc.json"
 }
