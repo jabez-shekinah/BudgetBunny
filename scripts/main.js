@@ -89,6 +89,15 @@ function toggleDarkMode() {
 function initApp() {
   try {
     loadFromLocalStorage();
+    // Ensure the persisted theme/state is applied to the DOM on startup
+    // (sets body/html classes, icon visibility and refreshes charts)
+    syncThemeToDOM();
+    document.body.classList.toggle("app--dark", state.darkMode);
+    document.documentElement.classList.toggle("dark", state.darkMode);
+    $("#moon-icon")?.classList.toggle("hidden", state.darkMode);
+    $("#sun-icon")?.classList.toggle("hidden", !state.darkMode);
+    refreshChartsTheme();
+
     updateHeaderDateAndYear();
 
     // Default date on add-expense form

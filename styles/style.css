@@ -19,6 +19,27 @@ body.app--dark textarea::selection {
   background: rgba(99, 102, 241, 0.45);
 }
 
+/* --- Design tokens & base refinements --- */
+:root{
+  --brand: #7c3aed;
+  --brand-600: #6d28d9;
+  --muted: #6b7280;
+  --bg-soft: #f8fafc;
+  --card-radius: 1rem;
+  --control-radius: 0.6rem;
+  --easing: cubic-bezier(.4,0,.2,1);
+  --dur: 180ms;
+}
+
+/* Typography */
+body{
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  font-size: 16px; /* subtle bump for readability */
+}
+
 /* =========================
    APP BLOCK
    .app (body)
@@ -111,16 +132,85 @@ body.app--dark .gradient-bg {
 ========================= */
 
 .card {
-  transition: all 0.3s ease;
+  background-clip: padding-box;
+  border-radius: var(--card-radius);
+  transition: transform var(--dur) var(--easing), box-shadow var(--dur) var(--easing);
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(17,24,39,0.08);
 }
 
 body.app--dark .card:hover {
   box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25);
+}
+
+/* Themed surface used by Add New Expense (follows light/dark modes) */
+.card-surface {
+  background-color: #ffffff; /* light mode surface */
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  box-shadow: 0 8px 20px rgba(17, 24, 39, 0.04);
+  transition: background-color var(--dur) var(--easing), border-color var(--dur) var(--easing), box-shadow var(--dur) var(--easing);
+}
+
+/* Strong override: ensure Add New Expense is light unless the page is in dark mode */
+html:not(.dark) body:not(.app--dark) .card-surface,
+html:not(.dark) .card-surface.bg-white,
+body:not(.app--dark) .card-surface.bg-white {
+  background-color: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.04) !important;
+  box-shadow: 0 8px 20px rgba(17, 24, 39, 0.04) !important;
+  color: #111827 !important;
+}
+
+/* Force inputs inside the Add Expense surface to match light mode unless dark is active */
+html:not(.dark) body:not(.app--dark) .card-surface .form__input,
+html:not(.dark) body:not(.app--dark) .card-surface .form__input--select,
+html:not(.dark) body:not(.app--dark) .card-surface .form__input--date {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border: 1px solid rgba(15,23,42,0.08) !important;
+  box-shadow: none !important;
+}
+
+/* Light-mode placeholder + prefix color */
+html:not(.dark) body:not(.app--dark) .card-surface .form__input::placeholder {
+  color: #9ca3af !important;
+}
+html:not(.dark) body:not(.app--dark) .card-surface .absolute.pointer-events-none {
+  color: #6b7280 !important;
+}
+
+/* Preserve intended dark-mode look when dark is active */
+.dark .card-surface .form__input,
+body.app--dark .card-surface .form__input {
+  background-color: #374151;
+  color: #e5e7eb;
+  border-color: rgba(255,255,255,0.04);
+}
+
+/* keep existing dark rule for when dark is active */
+.dark .card-surface,
+body.app--dark .card-surface {
+  background-color: #1f2937; /* matches other dark surfaces */
+  border-color: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.55);
+}
+
+/* Ensure labels/inputs inside remain legible */
+.card-surface .form__label {
+  color: #374151; /* neutral label in light mode */
+}
+.dark .card-surface .form__label,
+body.app--dark .card-surface .form__label {
+  color: #d1d5db;
+}
+
+/* Small lift on hover to match other cards */
+.card-surface:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 36px rgba(17,24,39,0.06);
 }
 
 /* =========================
@@ -131,7 +221,7 @@ body.app--dark .card:hover {
 ========================= */
 
 .button {
-  transition: all 0.2s ease;
+  transition: transform var(--dur) var(--easing), box-shadow var(--dur) var(--easing);
 }
 
 .button:hover {
@@ -139,9 +229,14 @@ body.app--dark .card:hover {
 }
 
 .button--gradient {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(90deg, var(--brand-600), var(--brand));
   color: #fff;
+  border-radius: var(--control-radius);
+  padding: .6rem .9rem;
+  box-shadow: 0 6px 18px rgba(124,58,237,0.12);
 }
+
+.button--gradient:active{ transform: translateY(1px); }
 
 .button--danger {
   background-color: #dc2626;
@@ -227,7 +322,8 @@ body.app--dark .transactions__action-btn:focus-visible {
 }
 
 .modal__dialog {
-  border-radius: 0.5rem;
+  border-radius: .85rem;
+  transition: transform var(--dur) var(--easing), opacity var(--dur) var(--easing);
 }
 
 .modal__header {
@@ -270,20 +366,15 @@ body.app--dark .form__label {
 }
 
 .form__input {
-  width: 100%;
-  border-radius: 0.5rem;
-  border-width: 1px;
-  background-color: #ffffff;
-  color: #111827;
-  border-color: #d1d5db;
-  padding: 0.5rem 1rem;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease,
-    background-color 0.2s ease, color 0.2s ease;
+  border-radius: var(--control-radius);
+  border: 1px solid rgba(15,23,42,0.06);
+  padding: .65rem .8rem;
+  transition: box-shadow var(--dur) var(--easing), border-color var(--dur) var(--easing);
 }
 .form__input:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
-  border-color: #6366f1;
+  box-shadow: 0 8px 26px rgba(99,102,241,0.10);
+  border-color: var(--brand-600);
 }
 
 .form__input--currency {
@@ -339,3 +430,14 @@ body.app--dark .form__input--date:focus::-moz-calendar-picker-indicator {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(139, 92, 246, 0.45);
 }
+
+/* Responsive tweaks */
+@media (max-width: 768px){
+  body{ font-size: 15px; }
+  .card{ padding: 1rem; }
+  .gradient-bg{ padding: 1rem; }
+}
+
+/* Small utility for subtle animations */
+.fade-up{ transform: translateY(6px); opacity: 0; transition: transform var(--dur) var(--easing), opacity var(--dur) var(--easing); }
+.fade-up.is-visible{ transform: translateY(0); opacity: 1; }
