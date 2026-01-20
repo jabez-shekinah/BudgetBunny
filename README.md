@@ -1,39 +1,39 @@
-# 💰 Daily Expense & Budget Tracker
+#  Daily Expense & Budget Tracker
 
 > A modular, client-side web application for tracking daily expenses, visualizing spending, and managing monthly budgets — with JSON import/export, dark mode, and persistent local storage.
 
 ---
 
-## 📘 Table of Contents
+## Table of Contents
 
-- [💰 Daily Expense \& Budget Tracker](#-daily-expense--budget-tracker)
-  - [📘 Table of Contents](#-table-of-contents)
-  - [🧭 Overview](#-overview)
-  - [🖥️ Live/Local Usage](#️-livelocal-usage)
-  - [⚙️ Key Features](#️-key-features)
+- [Daily Expense \& Budget Tracker](#-daily-expense--budget-tracker)
+  - [Table of Contents](#-table-of-contents)
+  - [Overview](#-overview)
+  - [Live/Local Usage](#️-livelocal-usage)
+  - [Key Features](#️-key-features)
     - [Core Functionality](#core-functionality)
     - [Data Handling](#data-handling)
     - [UX Enhancements](#ux-enhancements)
-  - [🚀 Quick Start](#-quick-start)
-  - [📖 How to Use](#-how-to-use)
+  - [Quick Start](#-quick-start)
+  - [How to Use](#-how-to-use)
     - [1. Set Budget \& Savings Goal](#1-set-budget--savings-goal)
     - [2. Add an Expense](#2-add-an-expense)
     - [3. View All Transactions](#3-view-all-transactions)
     - [4. Export / Import Data](#4-export--import-data)
     - [5. Change Chart View](#5-change-chart-view)
     - [6. Toggle Dark Mode](#6-toggle-dark-mode)
-  - [🧩 UI Guide](#-ui-guide)
-  - [🧱 Architecture \& Code Structure](#-architecture--code-structure)
-  - [🧠 Functions (Developer Reference)](#-functions-developer-reference)
-  - [🧰 Tech Stack](#-tech-stack)
-  - [📁 Project Documentation](#-project-documentation)
-    - [📄 Requirements Gathering Document](#-requirements-gathering-document)
-    - [✏️ Wireframe Justification and Design Decisions](#️-wireframe-justification-and-design-decisions)
-    - [📅 Project Plan and Gantt Chart](#-project-plan-and-gantt-chart)
+  - [UI Guide](#-ui-guide)
+  - [Architecture \& Code Structure](#-architecture--code-structure)
+  - [Functions (Developer Reference)](#-functions-developer-reference)
+  - [Tech Stack](#-tech-stack)
+  - [Project Documentation](#-project-documentation)
+    - [Requirements Gathering Document](#-requirements-gathering-document)
+    - [Wireframe Justification and Design Decisions](#️-wireframe-justification-and-design-decisions)
+    - [Project Plan and Gantt Chart](#-project-plan-and-gantt-chart)
 
 ---
 
-## 🧭 Overview
+## Overview
 
 The **Budget Tracker** is a modular single-page web app built using **Tailwind CSS** and **Vanilla JavaScript**.  
 It helps users:
@@ -49,7 +49,7 @@ All logic runs entirely in the browser — **no backend or database required**.
 
 ---
 
-## 🖥️ Live/Local Usage
+## Live/Local Usage
 
 Simply open the HTML file in your browser — no build tools needed.
 
@@ -79,31 +79,31 @@ Optionally, host the app using GitHub Pages, Vercel, or Netlify for live access.
 
 ---
 
-## ⚙️ Key Features
+## Key Features
 
 ### Core Functionality
 
-- 🧾 **Expense CRUD:** Add, edit, delete, and search transactions
-- 💰 **Budget & Savings Goals:** Visual progress with color-coded bars
-- 📊 **Charts:** Line (expense trends) and doughnut (category breakdown)
-- 🌓 **Dark Mode:** Persists between sessions
-- 🔁 **Data Persistence:** Saved automatically in `localStorage`
+-  **Expense CRUD:** Add, edit, delete, and search transactions
+-  **Budget & Savings Goals:** Visual progress with color-coded bars
+-  **Charts:** Line (expense trends) and doughnut (category breakdown)
+-  **Dark Mode:** Persists between sessions
+-  **Data Persistence:** Saved automatically in `localStorage`
 
 ### Data Handling
 
-- 📤 **Export:** Download a backup as `budgetTracker-YYYY-MM-DD.json`
-- 📥 **Import:** Restore previous data from a JSON file
-- 🔒 **Safe Storage:** Includes error handling and defensive merges
+-  **Export:** Download a backup as `budgetTracker-YYYY-MM-DD.json`
+-  **Import:** Restore previous data from a JSON file
+-  **Safe Storage:** Includes error handling and defensive merges
 
 ### UX Enhancements
 
-- 🔔 Toast notifications for feedback
-- 📱 Responsive design for all screen sizes
-- ♻️ Clean modular code for scalability
+-  Toast notifications for feedback
+-  Responsive design for all screen sizes
+-  Clean modular code for scalability
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 1. **Download or clone** this project.
 2. **Open** `index.html` in a browser.
@@ -145,7 +145,7 @@ Your theme preference is saved automatically.
 
 ---
 
-## 🧩 UI Guide
+##  UI Guide
 
 | Section                    | Description                                                    |
 | -------------------------- | -------------------------------------------------------------- |
@@ -158,7 +158,7 @@ Your theme preference is saved automatically.
 
 ---
 
-## 🧱 Architecture & Code Structure
+##  Architecture & Code Structure
 
 This app follows a modular ES6 structure for readability and scalability.
 
@@ -177,7 +177,7 @@ This app follows a modular ES6 structure for readability and scalability.
 
 ---
 
-## 🧠 Functions (Developer Reference)
+##  Functions (Developer Reference)
 
 | Function                    | Description                        |
 | --------------------------- | ---------------------------------- |
@@ -193,7 +193,7 @@ This app follows a modular ES6 structure for readability and scalability.
 
 ---
 
-## 🧰 Tech Stack
+##  Tech Stack
 
 - **Tailwind CSS (CDN)** – Utility-first styling
 - **Chart.js (CDN)** – Interactive charts
@@ -202,11 +202,11 @@ This app follows a modular ES6 structure for readability and scalability.
 
 ---
 
-## 📁 Project Documentation
+##  Project Documentation
 
 ---
 
-### 📄 Requirements Gathering Document
+###  Requirements Gathering Document
 
 This document outlines the initial phase of the project, detailing stakeholder requirements, functional and non-functional specifications, and the final approval log for the **Budget Tracker** project.
 
@@ -214,7 +214,7 @@ This document outlines the initial phase of the project, detailing stakeholder r
 
 ---
 
-### ✏️ Wireframe Justification and Design Decisions
+###  Wireframe Justification and Design Decisions
 
 This document provides the rationale behind the project's UI/UX design, justifying the wireframe choices based on **Human-Computer Interaction (HCI)** principles, technical feasibility, and user experience goals.
 
@@ -222,9 +222,10 @@ This document provides the rationale behind the project's UI/UX design, justifyi
 
 ---
 
-### 📅 Project Plan and Gantt Chart
+###  Project Plan and Gantt Chart
 
 This spreadsheet contains the complete project timeline, including the phased breakdown of activities, task durations, assigned team members, and overall schedule for the **Budget Tracker** project.
 
 <p align="center"><a href="https://docs.google.com/spreadsheets/d/1bwFmgUFChvp5VOA9_AfjprGblmZr6pWFwGl-YBRpSB8/edit?usp=sharing" target="_blank" style="outline:none;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/spreadsheets/d/1bwFmgUFChvp5VOA9_AfjprGblmZr6pWFwGl-YBRpSB8/edit?usp=sharing" alt="Project Plan QR Code" width="200" style="border:0;"/></a></p>
-`````
+
+## 
