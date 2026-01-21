@@ -1,0 +1,9 @@
+# Ignore the massive folder of installed packages
+node_modules/
+
+# Ignore system files (Mac/Windows specific junk)
+.DS_Store
+Thumbs.db
+
+# Ignore environment variables (Protect your passwords!)
+.env
