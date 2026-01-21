@@ -5,5 +5,5 @@ node_modules/
 .DS_Store
 Thumbs.db
 
-# Ignore environment variables (Protect your passwords!)
+# Ignore environment variables (Protect my passwords!)
 .env

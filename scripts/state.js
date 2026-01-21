@@ -1,6 +1,5 @@
 /**
  * Global application state.
- * This is our single source of truth for UI + data.
  * Everything else (charts, UI, storage) reads/writes here.
  */
 export const state = {

@@ -1,4 +1,4 @@
-// Import the necessary tools (packages)
+// Imports the necessary tools (packages)
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
@@ -6,7 +6,7 @@ const cors = require("cors");
 // Initialize the application
 const app = express();
 
-// Enable 'CORS' so your frontend can talk to your backend without security errors
+// Enable 'CORS' so frontend can talk to backend without security errors
 app.use(cors());
 
 // Middleware to parse JSON data (allows us to read data sent in POST requests)
@@ -14,7 +14,7 @@ app.use(express.json());
 
 // -------------------------------------------------------
 // SERVE STATIC FILES
-// This connects your existing HTML/CSS/JS to the server.
+// This connects existing HTML/CSS/JS to the server.
 // -------------------------------------------------------
 app.use(express.static(path.join(__dirname, ".")));
 
