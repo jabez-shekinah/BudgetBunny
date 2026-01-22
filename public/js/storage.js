@@ -1,5 +1,3 @@
-/* public/js/storage.js */
-
 import { state, formatCurrency } from "./state.js";
 import { showNotification, syncThemeToDOM, updateAllTransactionsTable } from "./ui.js";
 import { safeRenderAndCharts } from "./safe.js";
@@ -193,9 +191,50 @@ export function exportDataJSON() {
 }
 
 /* ------------------------------------------------------------------
-   Import Data (Disabled for Milestone 2)
-   Re-enabling this requires bulk-upload API logic.
+   Import Data (Cloud Migration)
 ------------------------------------------------------------------- */
+
+/**
+ * importDataFromFile(file)
+ * Reads a JSON file and uploads the expenses to MongoDB.
+ */
 export async function importDataFromFile(file) {
-  showNotification("⚠️ Import is temporarily disabled while we upgrade the database.");
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+
+    // 1. Basic Validation
+    if (!parsed.expenses || !Array.isArray(parsed.expenses)) {
+      throw new Error("Invalid file format: No expenses found.");
+    }
+
+    showNotification("⏳ Importing data... this may take a moment.");
+
+    // 2. Upload Loop
+    // We loop through every expense in the file and send it to the DB.
+    let count = 0;
+    for (const item of parsed.expenses) {
+      // Validate item has basics
+      if (item.description && item.amount && item.category && item.date) {
+        // Reuse the addExpenseToDB function we already wrote!
+        await addExpenseToDB({
+          description: item.description,
+          amount: item.amount,
+          category: item.category,
+          // Handle date format (if file has "2026-01-22" or full timestamp)
+          date: item.date.includes("T") ? item.date.split("T")[0] : item.date,
+        });
+        count++;
+      }
+    }
+
+    // 3. Refresh the App
+    // Now that they are in the DB, we re-fetch everything to show them.
+    await loadFromLocalStorage();
+
+    showNotification(`✅ Successfully imported ${count} expenses!`);
+  } catch (err) {
+    console.error("Import failed:", err);
+    showNotification("⚠️ Import failed. Check the file format.");
+  }
 }
