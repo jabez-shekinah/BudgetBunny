@@ -7,3 +7,6 @@ Thumbs.db
 
 # Ignore environment variables (Protect my passwords!)
 .env
+.DS_Store
+.DS_Store
+.DS_Store

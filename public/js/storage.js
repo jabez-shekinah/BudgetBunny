@@ -12,11 +12,7 @@
 // save wherever the browser saves downloads.
 
 import { state, formatCurrency } from "./state.js";
-import {
-  showNotification,
-  syncThemeToDOM,
-  updateAllTransactionsTable,
-} from "./ui.js";
+import { showNotification, syncThemeToDOM, updateAllTransactionsTable } from "./ui.js";
 import { safeRenderAndCharts } from "./safe.js";
 
 /* ------------------------------------------------------------------
@@ -36,8 +32,7 @@ export async function importDataFromFile(file) {
 
     // Defensive merge to prevent bad data structures
     if (typeof parsed.budget === "number") state.budget = parsed.budget;
-    if (typeof parsed.savingsGoal === "number")
-      state.savingsGoal = parsed.savingsGoal;
+    if (typeof parsed.savingsGoal === "number") state.savingsGoal = parsed.savingsGoal;
     if (typeof parsed.income === "number") state.income = parsed.income;
 
     if (Array.isArray(parsed.expenses)) {
@@ -45,8 +40,7 @@ export async function importDataFromFile(file) {
         ...e,
         // ensure timestamp even for older backups
         timestamp:
-          e.timestamp ??
-          (e.date ? new Date(e.date + "T00:00:00").getTime() : Date.now()),
+          e.timestamp ?? (e.date ? new Date(e.date + "T00:00:00").getTime() : Date.now()),
       }));
     }
 
@@ -88,9 +82,7 @@ export function saveToLocalStorageSafe() {
     localStorage.setItem("budgetTrackerData", JSON.stringify(payload));
   } catch (err) {
     console.error("LocalStorage save failed:", err);
-    showNotification(
-      "⚠️ Couldn’t save automatically. Export your data to avoid loss."
-    );
+    showNotification("⚠️ Couldn’t save automatically. Export your data to avoid loss.");
   }
 
   // Save dark mode separately for fast boot
@@ -132,9 +124,7 @@ export function loadFromLocalStorage() {
     }
   } catch (err) {
     console.warn("Data load failed:", err);
-    showNotification(
-      "⚠️ Could not restore previous data. You may need to re-enter it."
-    );
+    showNotification("⚠️ Could not restore previous data. You may need to re-enter it.");
   }
 
   // Reflect to UI immediately (if elements exist yet)
@@ -208,8 +198,6 @@ export function exportDataJSON() {
     showNotification("📤 Data exported successfully!");
   } catch (err) {
     console.error("Export failed:", err);
-    showNotification(
-      "⚠️ Export failed — try again or check browser permissions."
-    );
+    showNotification("⚠️ Export failed — try again or check browser permissions.");
   }
 }

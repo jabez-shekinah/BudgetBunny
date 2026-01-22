@@ -14,12 +14,7 @@
  * App "business data" lives in state.js.
  */
 
-import {
-  state,
-  formatCurrency,
-  parseLocalDate,
-  getCategoryName,
-} from "./state.js";
+import { state, formatCurrency, parseLocalDate, getCategoryName } from "./state.js";
 
 /**
  * Tiny DOM helpers
@@ -148,8 +143,8 @@ export function updateSummaryCards() {
       pctRemaining < 20
         ? "bg-red-500 "
         : pctRemaining < 50
-        ? "bg-yellow-500 "
-        : "bg-green-500 ";
+          ? "bg-yellow-500 "
+          : "bg-green-500 ";
 
     bar.className = colorClass + "h-2.5 rounded-full";
   }
@@ -161,9 +156,7 @@ export function updateSummaryCards() {
   state.savings = savedAmount;
 
   const savingsPct =
-    state.savingsGoal > 0
-      ? Math.round((savedAmount / state.savingsGoal) * 100)
-      : 0;
+    state.savingsGoal > 0 ? Math.round((savedAmount / state.savingsGoal) * 100) : 0;
 
   const savingsPctEl = $("#savings-percentage");
   if (savingsPctEl) {
@@ -199,8 +192,7 @@ export function updateRecentTransactions() {
   container.innerHTML = "";
 
   expenses.slice(0, 5).forEach((exp) => {
-    const color =
-      state.categoryColors[exp.category] || state.categoryColors.other;
+    const color = state.categoryColors[exp.category] || state.categoryColors.other;
 
     const expenseDate = parseLocalDate(exp.date).toLocaleDateString(undefined, {
       month: "short",
@@ -209,8 +201,7 @@ export function updateRecentTransactions() {
     });
 
     const row = document.createElement("div");
-    row.className =
-      "transactions__row flex items-center justify-between p-3 rounded-lg";
+    row.className = "transactions__row flex items-center justify-between p-3 rounded-lg";
 
     row.innerHTML = `
       <div class="flex items-center">
@@ -320,8 +311,7 @@ export function updateAllTransactionsTable() {
   empty.classList.add("hidden");
 
   txns.forEach((exp) => {
-    const color =
-      state.categoryColors[exp.category] || state.categoryColors.other;
+    const color = state.categoryColors[exp.category] || state.categoryColors.other;
 
     const expenseDate = parseLocalDate(exp.date).toLocaleDateString(undefined, {
       month: "short",
@@ -343,9 +333,7 @@ export function updateAllTransactionsTable() {
       <td class="px-6 py-4 whitespace-nowrap">
         <span
           class="px-2 py-1 text-xs font-medium rounded-full"
-          style="background-color:${color.bg.replace("0.8", "0.2")}; color:${
-      color.color
-    }"
+          style="background-color:${color.bg.replace("0.8", "0.2")}; color:${color.color}"
         >
           ${getCategoryName(exp.category)}
         </span>

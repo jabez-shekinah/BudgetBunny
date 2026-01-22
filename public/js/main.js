@@ -11,24 +11,14 @@
 
 import { state } from "./state.js";
 import { importDataFromFile } from "./storage.js";
-import {
-  $,
-  $$,
-  renderApp,
-  updateHeaderDateAndYear,
-  syncThemeToDOM,
-} from "./ui.js";
+import { $, $$, renderApp, updateHeaderDateAndYear, syncThemeToDOM } from "./ui.js";
 import { safeRenderAndCharts } from "./safe.js";
 import {
   loadFromLocalStorage,
   saveToLocalStorageSafe,
   exportDataJSON,
 } from "./storage.js";
-import {
-  initializeCharts,
-  refreshChartsTheme,
-  changeTimePeriod,
-} from "./charts.js";
+import { initializeCharts, refreshChartsTheme, changeTimePeriod } from "./charts.js";
 import {
   openBudgetModal,
   closeBudgetModal,
@@ -104,6 +94,16 @@ function initApp() {
     const dateInput = $("#expense-date");
     if (dateInput) dateInput.valueAsDate = new Date();
 
+    const logoutBtn = document.getElementById("logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        // 1. Remove the user key
+        localStorage.removeItem("user");
+        // 2. Redirect to Login page
+        window.location.href = "/login";
+      });
+    }
+
     initializeCharts();
     safeRenderAndCharts();
   } catch (err) {
@@ -156,14 +156,8 @@ function initApp() {
   $("#savings-cancel")?.addEventListener("click", closeSavingsModal);
 
   // --- All transactions modal ---
-  $("#view-all-transactions")?.addEventListener(
-    "click",
-    openAllTransactionsModal
-  );
-  $("#close-transactions")?.addEventListener(
-    "click",
-    closeAllTransactionsModal
-  );
+  $("#view-all-transactions")?.addEventListener("click", openAllTransactionsModal);
+  $("#close-transactions")?.addEventListener("click", closeAllTransactionsModal);
   $("#transaction-search")?.addEventListener("input", searchTransactions);
 
   // --- Table row actions (edit/delete) ---
@@ -179,14 +173,8 @@ function initApp() {
   });
 
   // --- Edit transaction modal ---
-  $("#edit-transaction-form")?.addEventListener(
-    "submit",
-    submitEditTransaction
-  );
-  $("#edit-transaction-cancel")?.addEventListener(
-    "click",
-    closeEditTransactionModal
-  );
+  $("#edit-transaction-form")?.addEventListener("submit", submitEditTransaction);
+  $("#edit-transaction-cancel")?.addEventListener("click", closeEditTransactionModal);
 
   // --- Delete confirmation modal ---
   $("#delete-confirm")?.addEventListener("click", confirmDeleteTransaction);
