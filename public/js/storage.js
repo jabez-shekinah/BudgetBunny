@@ -1,110 +1,83 @@
-/* eslint-env browser */
-
-// storage.js
-//
-// Handles persistent storage and import/export:
-// - LocalStorage CRUD
-// - JSON import/export with defensive merges
-// - Safe fallbacks and user notifications
-//
-// Works entirely client-side (browser). For projects using
-// a /json folder in dev, the downloaded file will still just
-// save wherever the browser saves downloads.
+/* public/js/storage.js */
 
 import { state, formatCurrency } from "./state.js";
 import { showNotification, syncThemeToDOM, updateAllTransactionsTable } from "./ui.js";
 import { safeRenderAndCharts } from "./safe.js";
 
+const API_BASE = "/api/expenses";
+
 /* ------------------------------------------------------------------
-   Import data (JSON file → state)
+   API HELPERS (The Bridge to MongoDB)
 ------------------------------------------------------------------- */
 
 /**
- * importDataFromFile(file)
- *
- * Reads a .json file, merges values safely into app state,
- * sorts transactions, refreshes UI/charts, and saves to localStorage.
+ * Get the current User ID from the logged-in session
  */
-export async function importDataFromFile(file) {
+function getCurrentUserId() {
   try {
-    const text = await file.text();
-    const parsed = JSON.parse(text);
-
-    // Defensive merge to prevent bad data structures
-    if (typeof parsed.budget === "number") state.budget = parsed.budget;
-    if (typeof parsed.savingsGoal === "number") state.savingsGoal = parsed.savingsGoal;
-    if (typeof parsed.income === "number") state.income = parsed.income;
-
-    if (Array.isArray(parsed.expenses)) {
-      state.expenses = parsed.expenses.map((e) => ({
-        ...e,
-        // ensure timestamp even for older backups
-        timestamp:
-          e.timestamp ?? (e.date ? new Date(e.date + "T00:00:00").getTime() : Date.now()),
-      }));
-    }
-
-    // newest first
-    state.expenses.sort((a, b) => b.timestamp - a.timestamp);
-    state.filteredTransactions = [...state.expenses];
-
-    // re-render after import
-    safeRenderAndCharts();
-    updateAllTransactionsTable();
-    saveToLocalStorageSafe();
-
-    showNotification("✅ Data imported successfully.");
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user && user.id ? user.id : null;
   } catch (err) {
-    console.error("Import failed:", err);
-    showNotification("⚠️ Import failed — invalid or corrupted JSON file.");
+    return null;
+  }
+}
+
+/**
+ * Storage.addExpense (CREATE)
+ * Sends a new expense to the server
+ */
+export async function addExpenseToDB(expenseData) {
+  const userId = getCurrentUserId();
+  if (!userId) {
+    showNotification("⚠️ You must be logged in to save expenses.");
+    return null;
+  }
+
+  try {
+    const res = await fetch(API_BASE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...expenseData, userId }),
+    });
+
+    if (!res.ok) throw new Error("Server rejected the expense");
+
+    return await res.json(); // Returns the saved expense (with _id)
+  } catch (err) {
+    console.error("API Error:", err);
+    showNotification("⚠️ Failed to save expense to server.");
+    return null;
+  }
+}
+
+/**
+ * Storage.deleteExpense (DELETE)
+ * Tells server to remove an expense by ID
+ */
+export async function deleteExpenseFromDB(id) {
+  try {
+    const res = await fetch(`${API_BASE}/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error("Delete failed");
+    return true;
+  } catch (err) {
+    console.error("API Error:", err);
+    showNotification("⚠️ Failed to delete expense.");
+    return false;
   }
 }
 
 /* ------------------------------------------------------------------
-   Save state → LocalStorage
+   Load Data (The Switch from LocalStorage to API)
 ------------------------------------------------------------------- */
 
 /**
- * saveToLocalStorageSafe()
- *
- * Persists app state in localStorage.
- * Wrapped in try/catch to handle quota or privacy errors.
+ * loadFromLocalStorage() -> Now acts as "Load Initial Data"
+ * 1. Loads Theme (from LocalStorage)
+ * 2. Loads User Info (from LocalStorage)
+ * 3. Fetches Expenses (from MongoDB API)
  */
-export function saveToLocalStorageSafe() {
-  try {
-    const payload = {
-      darkMode: state.darkMode,
-      budget: state.budget,
-      savingsGoal: state.savingsGoal,
-      expenses: state.expenses,
-      savings: state.savings,
-    };
-    localStorage.setItem("budgetTrackerData", JSON.stringify(payload));
-  } catch (err) {
-    console.error("LocalStorage save failed:", err);
-    showNotification("⚠️ Couldn’t save automatically. Export your data to avoid loss.");
-  }
-
-  // Save dark mode separately for fast boot
-  try {
-    localStorage.setItem("budgetTrackerDarkMode", state.darkMode);
-  } catch (err) {
-    console.warn("Could not save dark mode preference:", err);
-  }
-}
-
-/* ------------------------------------------------------------------
-   Load state ← LocalStorage
-------------------------------------------------------------------- */
-
-/**
- * loadFromLocalStorage()
- *
- * Restores app state and theme from LocalStorage.
- * Shows onboarding tip on first use.
- */
-export function loadFromLocalStorage() {
-  // Theme preference
+export async function loadFromLocalStorage() {
+  // 1. Load Theme (Keep this local!)
   try {
     const dm = localStorage.getItem("budgetTrackerDarkMode");
     if (dm !== null) state.darkMode = dm === "true";
@@ -112,92 +85,117 @@ export function loadFromLocalStorage() {
     console.warn("Theme load failed:", err);
   }
 
-  // Main data
-  try {
+  // 2. Load User Session
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    // In the future, we will fetch budget/savings from the DB too.
+    // For now, we use defaults or what's in local storage for settings.
     const raw = localStorage.getItem("budgetTrackerData");
     if (raw) {
       const data = JSON.parse(raw);
       state.budget = data.budget ?? state.budget;
       state.savingsGoal = data.savingsGoal ?? state.savingsGoal;
-      state.expenses = Array.isArray(data.expenses) ? data.expenses : [];
-      state.savings = data.savings ?? state.savings;
     }
-  } catch (err) {
-    console.warn("Data load failed:", err);
-    showNotification("⚠️ Could not restore previous data. You may need to re-enter it.");
   }
 
-  // Reflect to UI immediately (if elements exist yet)
-  const budgetEl = document.getElementById("budget-amount");
-  if (budgetEl) {
-    budgetEl.textContent = formatCurrency(state.budget);
+  // 3. FETCH EXPENSES FROM API (The Big Change)
+  if (user && user.id) {
+    try {
+      const res = await fetch(`${API_BASE}/${user.id}`);
+      if (res.ok) {
+        const serverExpenses = await res.json();
+
+        // Normalize data for the frontend
+        state.expenses = serverExpenses.map((e) => ({
+          id: e._id, // Map MongoDB '_id' to frontend 'id'
+          description: e.description,
+          amount: e.amount,
+          category: e.category,
+          date: new Date(e.date).toISOString().split("T")[0], // format YYYY-MM-DD
+          timestamp: new Date(e.date).getTime(),
+        }));
+      }
+    } catch (err) {
+      console.error("Failed to load expenses from server:", err);
+      showNotification("⚠️ Could not connect to database.");
+    }
   }
+
+  // 4. Update UI
+  const budgetEl = document.getElementById("budget-amount");
+  if (budgetEl) budgetEl.textContent = formatCurrency(state.budget);
 
   const savingsGoalEl = document.getElementById("savings-goal");
-  if (savingsGoalEl) {
-    savingsGoalEl.textContent = formatCurrency(state.savingsGoal);
-  }
+  if (savingsGoalEl) savingsGoalEl.textContent = formatCurrency(state.savingsGoal);
 
-  // Apply theme to DOM
   syncThemeToDOM();
+  // Safe render will update charts with the new API data
+  safeRenderAndCharts();
+  updateAllTransactionsTable();
+}
 
-  // First-time onboarding message
+/* ------------------------------------------------------------------
+   Save Data
+------------------------------------------------------------------- */
+
+/**
+ * saveToLocalStorageSafe()
+ * Now ONLY saves Settings/Theme.
+ * Expenses are saved automatically to DB via addExpenseToDB().
+ */
+export function saveToLocalStorageSafe() {
   try {
-    if (!localStorage.getItem("budgetTrackerHasOnboarded")) {
-      showNotification(
-        "💡 Tip: Add your first expense, then click 'View All' to explore analytics!"
-      );
-      localStorage.setItem("budgetTrackerHasOnboarded", "true");
-    }
-  } catch {
-    // ignore storage restriction errors
+    // We only save preferences locally now, not the expense list
+    const payload = {
+      darkMode: state.darkMode,
+      budget: state.budget,
+      savingsGoal: state.savingsGoal,
+      // We DO NOT save 'expenses' here anymore! They live in the cloud.
+    };
+    localStorage.setItem("budgetTrackerData", JSON.stringify(payload));
+    localStorage.setItem("budgetTrackerDarkMode", state.darkMode);
+  } catch (err) {
+    console.warn("Settings save failed:", err);
   }
 }
 
 /* ------------------------------------------------------------------
-   Export state → JSON
+   Export Data (Keep as Utility)
 ------------------------------------------------------------------- */
 
-/**
- * exportDataJSON()
- *
- * Serializes the current app state to a downloadable JSON file.
- * Filename includes today's date, e.g.
- *   budgetTracker-2025-10-26.json
- */
 export function exportDataJSON() {
   try {
     const payload = {
       budget: state.budget,
       savingsGoal: state.savingsGoal,
       expenses: state.expenses,
-      savings: state.savings,
     };
 
-    // build yyyy-mm-dd
     const now = new Date();
-    const yyyy = now.getFullYear();
-    const mm = String(now.getMonth() + 1).padStart(2, "0"); // months are 0-based
-    const dd = String(now.getDate()).padStart(2, "0");
-
-    const fileName = `budgetTracker-${yyyy}-${mm}-${dd}.json`;
+    const fileName = `budgetBunny-${now.toISOString().split("T")[0]}.json`;
 
     const blob = new Blob([JSON.stringify(payload, null, 2)], {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
 
-    // trigger download
     const a = document.createElement("a");
     a.href = url;
     a.download = fileName;
     a.click();
-
     URL.revokeObjectURL(url);
 
     showNotification("📤 Data exported successfully!");
   } catch (err) {
     console.error("Export failed:", err);
-    showNotification("⚠️ Export failed — try again or check browser permissions.");
+    showNotification("⚠️ Export failed.");
   }
+}
+
+/* ------------------------------------------------------------------
+   Import Data (Disabled for Milestone 2)
+   Re-enabling this requires bulk-upload API logic.
+------------------------------------------------------------------- */
+export async function importDataFromFile(file) {
+  showNotification("⚠️ Import is temporarily disabled while we upgrade the database.");
 }

@@ -82,6 +82,62 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+const Expense = require("./models/Expense"); // Import the model
+
+// -------------------------------------------------------
+// EXPENSE CRUD ROUTES
+// -------------------------------------------------------
+
+// 1. CREATE: Add a new expense
+app.post("/api/expenses", async (req, res) => {
+  try {
+    const { userId, description, amount, category, date } = req.body;
+
+    // Validation
+    if (!userId || !description || !amount || !category) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const newExpense = new Expense({
+      userId,
+      description,
+      amount,
+      category,
+      date,
+    });
+
+    const savedExpense = await newExpense.save();
+    res.status(201).json(savedExpense);
+  } catch (err) {
+    console.error("Error saving expense:", err);
+    res.status(500).json({ error: "Failed to save expense" });
+  }
+});
+
+// 2. READ: Get all expenses for a specific user
+app.get("/api/expenses/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const expenses = await Expense.find({ userId }).sort({ date: -1 }); // Newest first
+    res.json(expenses);
+  } catch (err) {
+    console.error("Error fetching expenses:", err);
+    res.status(500).json({ error: "Failed to fetch expenses" });
+  }
+});
+
+// 3. DELETE: Remove an expense
+app.delete("/api/expenses/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Expense.findByIdAndDelete(id);
+    res.json({ message: "Expense deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting expense:", err);
+    res.status(500).json({ error: "Failed to delete expense" });
+  }
+});
+
 // -------------------------------------------------------
 // HTML PAGE ROUTES
 // -------------------------------------------------------
