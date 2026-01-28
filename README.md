@@ -6,17 +6,17 @@
 
 ## Table of Contents
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [UI Guide](#-ui-guide)
-- [Architecture & Code Structure](#-architecture--code-structure)
-- [Functions (Developer Reference)](#-functions-developer-reference)
-- [Installation & Setup](#-installation--setup)
-- [API Documentation](#-api-documentation)
-- [How to Use](#-how-to-use)
-- [Project Documentation](#-project-documentation)
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [UI Guide](#ui-guide)
+- [Architecture & Code Structure](#architecture--code-structure)
+- [Functions (Developer Reference)](#functions-developer-reference)
+- [Installation & Setup](#installation--setup)
+- [API Documentation](#api-documentation)
+- [How to Use](#how-to-use)
+- [Project Documentation](#project-documentation)
 
 ---
 
