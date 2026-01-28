@@ -54,11 +54,13 @@ It allows users to:
 
 ##  Tech Stack
 
-- Frontend | Vanilla JS (ES6) | Modular, lightweight client logic. |
-- Styling | Tailwind CSS | Utility-first responsive design. |
-- Backend | Node.js + Express | RESTful API server. |
-- Database** | MongoDB + Mongoose | NoSQL schema-based data storage. |
-- Visualization | Chart.js | Interactive data rendering. |
+| Component | Technology | Description |
+|-----------|------------|-------------|
+| **Frontend** | Vanilla JS (ES6) | Modular, lightweight client logic |
+| **Styling** | Tailwind CSS | Utility-first responsive design |
+| **Backend** | Node.js + Express | RESTful API server |
+| **Database** | MongoDB + Mongoose | NoSQL schema-based data storage |
+| **Visualization** | Chart.js | Interactive data rendering |
 
 ---
 
