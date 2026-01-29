@@ -1,6 +1,5 @@
 /**
  * Global application state.
- * This is our single source of truth for UI + data.
  * Everything else (charts, UI, storage) reads/writes here.
  */
 export const state = {
@@ -8,7 +7,7 @@ export const state = {
   darkMode: false, // mirrors <body class="app--dark">
 
   // --- Budgeting / Targets ---
-  budget: 10000.0, // monthly budget (PHP)
+  budget: 20000.0, // monthly budget (PHP)
   savingsGoal: 1000.0, // monthly savings target (PHP)
   income: 0, // reserved for future recurring income feature
 
@@ -27,6 +26,7 @@ export const state = {
   // --- Category styling map (UI colors for pills/icons) ---
   categoryColors: {
     food: { bg: "rgba(99, 102, 241, 0.8)", color: "#6366f1" },
+    grocery: { bg: "rgba(16, 185, 129, 0.8)", color: "#10b981" },
     transportation: { bg: "rgba(59, 130, 246, 0.8)", color: "#3b82f6" },
     entertainment: { bg: "rgba(139, 92, 246, 0.8)", color: "#8b5cf6" },
     utilities: { bg: "rgba(34, 197, 94, 0.8)", color: "#22c55e" },
@@ -42,6 +42,7 @@ export const state = {
  */
 export const CATEGORY_NAMES = {
   food: "Food & Dining",
+  grocery: "Grocery",
   transportation: "Transportation",
   entertainment: "Entertainment",
   utilities: "Utilities",

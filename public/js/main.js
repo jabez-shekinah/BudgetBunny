@@ -1,34 +1,14 @@
-/* eslint-env browser */
-
-// main.js
-//
-// Application entry point:
-// - Initializes charts, theme, and persistent state
-// - Attaches all global event listeners
-// - Provides error-safe initialization and user import/export
-//
-// Every module (state, charts, modals, ui, storage) contributes to this flow.
-
 import { state } from "./state.js";
-import { importDataFromFile } from "./storage.js";
-import {
-  $,
-  $$,
-  renderApp,
-  updateHeaderDateAndYear,
-  syncThemeToDOM,
-} from "./ui.js";
+import { $, $$, updateHeaderDateAndYear, syncThemeToDOM } from "./ui.js";
 import { safeRenderAndCharts } from "./safe.js";
+// Merged imports from storage.js
 import {
   loadFromLocalStorage,
   saveToLocalStorageSafe,
   exportDataJSON,
+  importDataFromFile,
 } from "./storage.js";
-import {
-  initializeCharts,
-  refreshChartsTheme,
-  changeTimePeriod,
-} from "./charts.js";
+import { initializeCharts, refreshChartsTheme, changeTimePeriod } from "./charts.js";
 import {
   openBudgetModal,
   closeBudgetModal,
@@ -52,11 +32,6 @@ import {
    Theme toggle
 ------------------------------------------------------------------- */
 
-/**
- * toggleDarkMode()
- *
- * Toggles dark/light mode with persistence and chart refresh.
- */
 function toggleDarkMode() {
   try {
     state.darkMode = !state.darkMode;
@@ -66,7 +41,6 @@ function toggleDarkMode() {
     document.body.classList.toggle("app--dark", state.darkMode);
     document.documentElement.classList.toggle("dark", state.darkMode);
 
-    // icon toggles
     $("#moon-icon")?.classList.toggle("hidden", state.darkMode);
     $("#sun-icon")?.classList.toggle("hidden", !state.darkMode);
 
@@ -82,15 +56,14 @@ function toggleDarkMode() {
 
 /**
  * initApp()
- *
- * Initializes app state, restores data, sets up charts, and
- * attaches global event listeners.
+ * ⚠️ UPDATED: Now ASYNC to wait for Database Fetch
  */
-function initApp() {
+async function initApp() {
   try {
-    loadFromLocalStorage();
-    // Ensure the persisted theme/state is applied to the DOM on startup
-    // (sets body/html classes, icon visibility and refreshes charts)
+    // 1. Wait for data from MongoDB before showing anything
+    await loadFromLocalStorage();
+
+    // 2. Apply Theme & UI State
     syncThemeToDOM();
     document.body.classList.toggle("app--dark", state.darkMode);
     document.documentElement.classList.toggle("dark", state.darkMode);
@@ -104,6 +77,16 @@ function initApp() {
     const dateInput = $("#expense-date");
     if (dateInput) dateInput.valueAsDate = new Date();
 
+    // Logout Logic
+    const logoutBtn = document.getElementById("logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+      });
+    }
+
+    // 3. Initialize Charts (Now that we have data)
     initializeCharts();
     safeRenderAndCharts();
   } catch (err) {
@@ -127,7 +110,7 @@ function initApp() {
     } catch (err) {
       console.error("importDataFromFile failed:", err);
     } finally {
-      e.target.value = ""; // reset so import can trigger again
+      e.target.value = "";
     }
   });
 
@@ -139,7 +122,6 @@ function initApp() {
     }
   });
 
-  // Theme toggle
   $("#theme-toggle")?.addEventListener("click", toggleDarkMode);
 
   // Add expense form
@@ -156,14 +138,8 @@ function initApp() {
   $("#savings-cancel")?.addEventListener("click", closeSavingsModal);
 
   // --- All transactions modal ---
-  $("#view-all-transactions")?.addEventListener(
-    "click",
-    openAllTransactionsModal
-  );
-  $("#close-transactions")?.addEventListener(
-    "click",
-    closeAllTransactionsModal
-  );
+  $("#view-all-transactions")?.addEventListener("click", openAllTransactionsModal);
+  $("#close-transactions")?.addEventListener("click", closeAllTransactionsModal);
   $("#transaction-search")?.addEventListener("input", searchTransactions);
 
   // --- Table row actions (edit/delete) ---
@@ -172,21 +148,18 @@ function initApp() {
     if (!btn) return;
 
     const action = btn.dataset.action;
-    const id = parseInt(btn.dataset.id, 10);
+
+    // ⚠️ FIXED: MongoDB IDs are strings (e.g. "65a..."), NOT integers!
+    // Do NOT use parseInt() here anymore.
+    const id = btn.dataset.id;
 
     if (action === "edit") openEditTransaction(id);
     else if (action === "delete") openDeleteTransaction(id);
   });
 
   // --- Edit transaction modal ---
-  $("#edit-transaction-form")?.addEventListener(
-    "submit",
-    submitEditTransaction
-  );
-  $("#edit-transaction-cancel")?.addEventListener(
-    "click",
-    closeEditTransactionModal
-  );
+  $("#edit-transaction-form")?.addEventListener("submit", submitEditTransaction);
+  $("#edit-transaction-cancel")?.addEventListener("click", closeEditTransactionModal);
 
   // --- Delete confirmation modal ---
   $("#delete-confirm")?.addEventListener("click", confirmDeleteTransaction);

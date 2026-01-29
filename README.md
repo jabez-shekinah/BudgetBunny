@@ -1,151 +1,94 @@
-# 💰 Daily Expense & Budget Tracker
+#  Daily Expense & Budget Tracker
 
-> A modular, client-side web application for tracking daily expenses, visualizing spending, and managing monthly budgets — with JSON import/export, dark mode, and persistent local storage.
-
----
-
-## 📘 Table of Contents
-
-- [💰 Daily Expense \& Budget Tracker](#-daily-expense--budget-tracker)
-  - [📘 Table of Contents](#-table-of-contents)
-  - [🧭 Overview](#-overview)
-  - [🖥️ Live/Local Usage](#️-livelocal-usage)
-  - [⚙️ Key Features](#️-key-features)
-    - [Core Functionality](#core-functionality)
-    - [Data Handling](#data-handling)
-    - [UX Enhancements](#ux-enhancements)
-  - [🚀 Quick Start](#-quick-start)
-  - [📖 How to Use](#-how-to-use)
-    - [1. Set Budget \& Savings Goal](#1-set-budget--savings-goal)
-    - [2. Add an Expense](#2-add-an-expense)
-    - [3. View All Transactions](#3-view-all-transactions)
-    - [4. Export / Import Data](#4-export--import-data)
-    - [5. Change Chart View](#5-change-chart-view)
-    - [6. Toggle Dark Mode](#6-toggle-dark-mode)
-  - [🧩 UI Guide](#-ui-guide)
-  - [🧱 Architecture \& Code Structure](#-architecture--code-structure)
-  - [🧠 Functions (Developer Reference)](#-functions-developer-reference)
-  - [🧰 Tech Stack](#-tech-stack)
-  - [📁 Project Documentation](#-project-documentation)
-    - [📄 Requirements Gathering Document](#-requirements-gathering-document)
-    - [✏️ Wireframe Justification and Design Decisions](#️-wireframe-justification-and-design-decisions)
-    - [📅 Project Plan and Gantt Chart](#-project-plan-and-gantt-chart)
+> A robust, full-stack web application for tracking personal finances. Originally a static site, this project has evolved into a dynamic **MERN Stack** (MongoDB, Express, Node.js) application featuring secure user authentication, cloud data persistence, and real-time analytics.
 
 ---
 
-## 🧭 Overview
+## Table of Contents
 
-The **Budget Tracker** is a modular single-page web app built using **Tailwind CSS** and **Vanilla JavaScript**.  
-It helps users:
-
-- Manage a monthly **budget** and **savings goal**
-- Log, edit, and delete daily **expenses**
-- Visualize spending with **Chart.js**
-- Export or import all data as **JSON backups**
-- Switch between **dark and light themes**
-- Store data persistently via **localStorage**
-
-All logic runs entirely in the browser — **no backend or database required**.
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [UI Guide](#ui-guide)
+- [Architecture & Code Structure](#architecture--code-structure)
+- [Functions (Developer Reference)](#functions-developer-reference)
+- [Installation & Setup](#installation--setup)
+- [API Documentation](#api-documentation)
+- [How to Use](#how-to-use)
+- [Project Documentation](#project-documentation)
 
 ---
 
-## 🖥️ Live/Local Usage
+## Overview
 
-Simply open the HTML file in your browser — no build tools needed.
+**BudgetBunny** solves the limitation of device-restricted storage by moving from localStorage to a secure cloud database, allowing you to access your data from any device. 
+
+It allows users to:
+
+- **Register & Login** securely to access private data from any device.
+- **Track Expenses** with cloud persistence (MongoDB Atlas).
+- **Visualize Spending** via interactive charts.
+- **Migrate Data** using a smart Bulk Import tool that uploads local JSON files to the cloud.
+
+---
+
+## Key Features
+
+### Security & Authentication
+- **User Registration/Login:** Session-based authentication using Express.
+- **Data Isolation:** Users can only view and manage their own expenses.
+- **Password Hashing:** (Planned/Ready for implementation).
+
+### Cloud & Database
+- **MongoDB Atlas Integration:** All expenses are stored in a scalable cloud database.
+- **CRUD Operations:** Create, Read, and Delete expenses directly from the server.
+- **Bulk Import/Migration:** Upload a JSON file to batch-process and save expenses to the database instantly.
+
+### Dashboard & Analytics
+- **Dynamic Charts:** Real-time updates using Chart.js.
+- **Global Search:** Filter transactions by date, category, or amount.
+- **Dark Mode:** Persisted theme preferences.
+
+---
+
+##  Tech Stack
+
+| Component | Technology | Description |
+|-----------|------------|-------------|
+| **Frontend** | Vanilla JS (ES6) | Modular, lightweight client logic |
+| **Styling** | Tailwind CSS | Utility-first responsive design |
+| **Backend** | Node.js + Express | RESTful API server |
+| **Database** | MongoDB + Mongoose | NoSQL schema-based data storage |
+| **Visualization** | Chart.js | Interactive data rendering |
+
+---
+
+## Project Structure
 
 ```plaintext
-BudgetTrackerWebsite/
-├─ .vscode/
-│  └─ settings.json
-├─ images/
-├─ json/
-│  ├─ .eslintrc.json
-│  └─ .prettierrc.json
-├─ scripts/
-│  ├─ charts.js
-│  ├─ main.js
-│  ├─ modals.js
-│  ├─ safe.js
-│  ├─ state.js
-│  ├─ storage.js
-│  └─ ui.js
-├─ styles/
-│  └─ style.css
-├─ index.html
+BudgetBunny/
+├─ models/
+│  ├─ User.js          # Mongoose Schema for Users
+│  └─ Expense.js       # Mongoose Schema for Expenses
+├─ public/             # Client-Side Code
+│  ├─ js/
+│  │  ├─ main.js       # Entry point (Async/Await)
+│  │  ├─ storage.js    # API Bridge (Fetch Calls)
+│  │  └─ ...
+│  ├─ styles/
+│  └─ index.html
+├─ .env                # Secrets (MONGO_URI)
+├─ server.js           # Express App & API Routes
+├─ package.json        # Dependencies
+└─ README.md
 └─ README.md
 ```
 
-Optionally, host the app using GitHub Pages, Vercel, or Netlify for live access.
 
 ---
 
-## ⚙️ Key Features
-
-### Core Functionality
-
-- 🧾 **Expense CRUD:** Add, edit, delete, and search transactions
-- 💰 **Budget & Savings Goals:** Visual progress with color-coded bars
-- 📊 **Charts:** Line (expense trends) and doughnut (category breakdown)
-- 🌓 **Dark Mode:** Persists between sessions
-- 🔁 **Data Persistence:** Saved automatically in `localStorage`
-
-### Data Handling
-
-- 📤 **Export:** Download a backup as `budgetTracker-YYYY-MM-DD.json`
-- 📥 **Import:** Restore previous data from a JSON file
-- 🔒 **Safe Storage:** Includes error handling and defensive merges
-
-### UX Enhancements
-
-- 🔔 Toast notifications for feedback
-- 📱 Responsive design for all screen sizes
-- ♻️ Clean modular code for scalability
-
----
-
-## 🚀 Quick Start
-
-1. **Download or clone** this project.
-2. **Open** `index.html` in a browser.
-3. Start adding expenses — your data will automatically be saved locally.
-
----
-
-## 📖 How to Use
-
-### 1. Set Budget & Savings Goal
-
-Click the **Total Budget** or **Savings Goal** amount to open a modal.
-Enter a new value and click **Save**.
-
-### 2. Add an Expense
-
-Fill out the **Description**, **Amount**, **Category**, and **Date** fields, then click **Add Expense**.
-The new entry will appear in **Recent Transactions** and update all charts.
-
-### 3. View All Transactions
-
-Click **View All** to open a full table view.
-Use the **Search** bar to filter by description, category, amount, or date.
-Click the **✏️ pencil icon** to edit or the **🗑️ trash icon** to delete a transaction.
-
-### 4. Export / Import Data
-
-- **Export:** Click **Export Data** to download a JSON backup file named `budgetTracker-YYYY-MM-DD.json`.
-- **Import:** Click **Import Data** to upload a previous backup and restore your budget, savings, and transactions.
-
-### 5. Change Chart View
-
-Switch between **Week**, **Month**, and **Year** in the **Expense Overview** chart to visualize your spending trends.
-
-### 6. Toggle Dark Mode
-
-Click the **🌙 moon/sun ☀️** icon in the header to switch between light and dark themes.
-Your theme preference is saved automatically.
-
----
-
-## 🧩 UI Guide
+##  UI Guide
 
 | Section                    | Description                                                    |
 | -------------------------- | -------------------------------------------------------------- |
@@ -158,55 +101,121 @@ Your theme preference is saved automatically.
 
 ---
 
-## 🧱 Architecture & Code Structure
+## Architecture & Code Structure
 
-This app follows a modular ES6 structure for readability and scalability.
+The project uses a **MVC (Model-View-Controller)** adapted pattern. The Backend (Node/Express) handles data logic, while the Frontend (Vanilla JS) handles the UI.
 
-| File                    | Purpose                             |
-| ----------------------- | ----------------------------------- |
-| `scripts/state.js`      | Central state and helper functions  |
-| `scripts/ui.js`         | UI rendering and notification logic |
-| `scripts/charts.js`     | Chart.js setup and updates          |
-| `scripts/safe.js`       | Safe rendering wrapper              |
-| `scripts/storage.js`    | LocalStorage CRUD, import/export    |
-| `scripts/modals.js`     | Modal dialog management             |
-| `scripts/main.js`       | Event listeners and initialization  |
-| `styles/style.css`      | Custom styling                      |
-| `json/.eslintrc.json`   | ESLint configuration                |
-| `json/.prettierrc.json` | Prettier configuration              |
-
----
-
-## 🧠 Functions (Developer Reference)
-
-| Function                    | Description                        |
-| --------------------------- | ---------------------------------- |
-| `renderApp()`               | Refreshes all UI sections          |
-| `safeRenderAndCharts()`     | Safely re-renders UI and charts    |
-| `initializeCharts()`        | Creates Chart.js instances         |
-| `updateCharts()`            | Updates both charts                |
-| `importDataFromFile(file)`  | Imports JSON backup defensively    |
-| `exportDataJSON()`          | Exports current data as dated JSON |
-| `saveToLocalStorageSafe()`  | Persists state securely            |
-| `syncThemeToDOM()`          | Syncs dark/light theme             |
-| `showNotification(message)` | Displays toast feedback            |
+| File Location           | Purpose |
+| :---                    | :--- |
+| **Backend** | |
+| `server.js`             | Express server entry point. Handles API routes, DB connection, and serving static files. |
+| `models/User.js`        | Mongoose schema defining the User structure. |
+| `models/Expense.js`     | Mongoose schema defining the Expense structure. |
+| **Frontend** | |
+| `public/js/main.js`     | App entry point. Handles `async` initialization and global event listeners. |
+| `public/js/storage.js`  | **API Bridge.** Contains `fetch` calls to talk to the backend (GET, POST, DELETE). |
+| `public/js/state.js`    | Manages temporary client-side state (filtered lists, current view). |
+| `public/js/ui.js`       | pure UI logic. Updates the DOM and handles notifications. |
+| `public/js/modals.js`   | Manages form submissions and modal visibility. |
+| `public/js/charts.js`   | Configures and updates Chart.js visualizations. |
 
 ---
 
-## 🧰 Tech Stack
+## Functions (Developer Reference)
 
-- **Tailwind CSS (CDN)** – Utility-first styling
-- **Chart.js (CDN)** – Interactive charts
-- **Vanilla JavaScript (ES6 Modules)** – Core logic
-- **LocalStorage** – Data persistence
+Key functions used to manage data flow between the Client and the Database.
+
+| Function | Description |
+| :--- | :--- |
+| **Data & API** | |
+| `addExpenseToDB(data)`  | **Async.** Sends a `POST` request to save a new expense to MongoDB. |
+| `deleteExpenseFromDB(id)`| **Async.** Sends a `DELETE` request to remove an expense from the server. |
+| `importDataFromFile(file)`| **Async.** Reads a JSON file and performs a **bulk upload** of expenses to the database. |
+| `loadFromLocalStorage()` | **Async.** Loads the user session and **fetches** live data from the API. |
+| `saveToLocalStorageSafe()`| **Sync.** Now strictly saves *user preferences* (Theme, Budget Goals) locally. |
+| **Visualization** | |
+| `safeRenderAndCharts()` | Wrapper that safely re-draws the dashboard and charts with new data. |
+| `renderApp()`           | Updates the DOM elements (tables, summary cards) based on current state. |
+| `syncThemeToDOM()`      | Applies the Dark/Light mode class to the `<body>`. |
 
 ---
 
-## 📁 Project Documentation
+## Installation & Setup
+
+### Prerequisites
+- Node.js installed.
+- A MongoDB Atlas account.
+
+### Setup Instructions
+
+1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/BudgetBunny.git
+cd BudgetBunny
+```
+
+2. Install Dependencies
+```bash
+npm install
+```
+
+3. Configure Environment
+
+Create a `.env` file in the root directory:
+```env
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/testDB?retryWrites=true&w=majority
+PORT=3000
+```
+
+4. Run the Server
+```bash
+npm start
+```
+
+The server will start on `http://localhost:3000`
+  
+---
+
+## API Documentation
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/register` | Create a new user account. |
+| POST | `/api/login` | Authenticate user & start session. |
+| GET | `/api/expenses/:userId` | Fetch all expenses for a specific user. |
+| POST | `/api/expenses` | Save a new expense to the database. |
+| DELETE | `/api/expenses/:id` | Permanently remove an expense. |
 
 ---
 
-### 📄 Requirements Gathering Document
+## How to Use
+
+### 1. Register
+
+Create an account on the login screen.
+
+### 2. Create an account on the login screen.
+
+Once logged in, you will see your empty dashboard.
+
+### 3. Add Expense
+
+Use the sidebar form to add a transaction. It saves instantly to the cloud.
+
+### 4. Export / Import Data
+
+- **Export:** Click **Export Data** to download a JSON backup file named `budgetTracker-YYYY-MM-DD.json`.
+- **Import:** Click **Import Data** to upload it to your new cloud account.
+
+### 5. Analyze
+
+Switch chart views to see monthly or yearly trends.
+
+##  Project Documentation
+
+---
+
+###  Requirements Gathering Document
 
 This document outlines the initial phase of the project, detailing stakeholder requirements, functional and non-functional specifications, and the final approval log for the **Budget Tracker** project.
 
@@ -214,7 +223,7 @@ This document outlines the initial phase of the project, detailing stakeholder r
 
 ---
 
-### ✏️ Wireframe Justification and Design Decisions
+###  Wireframe Justification and Design Decisions
 
 This document provides the rationale behind the project's UI/UX design, justifying the wireframe choices based on **Human-Computer Interaction (HCI)** principles, technical feasibility, and user experience goals.
 
@@ -222,9 +231,10 @@ This document provides the rationale behind the project's UI/UX design, justifyi
 
 ---
 
-### 📅 Project Plan and Gantt Chart
+###  Project Plan and Gantt Chart
 
 This spreadsheet contains the complete project timeline, including the phased breakdown of activities, task durations, assigned team members, and overall schedule for the **Budget Tracker** project.
 
 <p align="center"><a href="https://docs.google.com/spreadsheets/d/1bwFmgUFChvp5VOA9_AfjprGblmZr6pWFwGl-YBRpSB8/edit?usp=sharing" target="_blank" style="outline:none;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/spreadsheets/d/1bwFmgUFChvp5VOA9_AfjprGblmZr6pWFwGl-YBRpSB8/edit?usp=sharing" alt="Project Plan QR Code" width="200" style="border:0;"/></a></p>
-`````
+
+## 

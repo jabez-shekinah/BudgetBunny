@@ -1,0 +1,27 @@
+{
+  "name": "budgetbunny",
+  "version": "1.0.0",
+  "description": "> A modular, client-side web application for tracking daily expenses, visualizing spending, and managing monthly budgets — with JSON import/export, dark mode, and persistent local storage.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polochamps/BudgetBunny.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/polochamps/BudgetBunny/issues"
+  },
+  "homepage": "https://github.com/polochamps/BudgetBunny#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mongodb": "^7.0.0",
+    "mongoose": "^9.1.5"
+  }
+}

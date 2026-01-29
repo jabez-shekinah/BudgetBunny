@@ -1,21 +1,11 @@
-// modals.js
-//
-// Centralized modal + form logic:
-// - Opening/closing modals with focus trapping and ESC support (WCAG-friendly)
-// - Budget / Savings update flows
-// - All Transactions modal (search/filter/edit/delete)
-// - Add Expense form
-//
-// All UI refreshes go through safeRenderAndCharts() so a render/chart error
-// won't kill the app. We also wrap state mutations + storage in try/catch
-// for resilience.
-
-/* eslint-env browser */
-
 import { state, parseLocalDate } from "./state.js";
 import { safeRenderAndCharts } from "./safe.js";
 import { $, showNotification, updateAllTransactionsTable } from "./ui.js";
-import { saveToLocalStorageSafe } from "./storage.js";
+import {
+  saveToLocalStorageSafe,
+  addExpenseToDB,
+  deleteExpenseFromDB,
+} from "./storage.js";
 
 /* ------------------------------------------------------------------
    Accessible modal focus management
@@ -24,12 +14,6 @@ import { saveToLocalStorageSafe } from "./storage.js";
 let activeModal = null;
 let lastFocusedElementBeforeModal = null;
 
-/**
- * keepFocusInModal
- *
- * Trap keyboard focus in the open modal.
- * Users hitting Tab / Shift+Tab should not "escape" behind it.
- */
 function keepFocusInModal(e) {
   if (!activeModal || e.key !== "Tab") return;
 
@@ -53,21 +37,11 @@ function keepFocusInModal(e) {
   }
 }
 
-/**
- * handleEscToClose
- *
- * Pressing Escape closes the currently active modal.
- */
 function handleEscToClose(e) {
   if (e.key !== "Escape" || !activeModal) return;
   closeModal(activeModal.id);
 }
 
-/**
- * openModal
- *
- * Show modal + move focus into it.
- */
 export function openModal(id) {
   const modal = document.getElementById(id);
   if (!modal) return;
@@ -77,7 +51,6 @@ export function openModal(id) {
 
   modal.classList.remove("hidden");
 
-  // Focus first interactive control inside the modal
   const focusables = modal.querySelectorAll(
     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
   );
@@ -89,11 +62,6 @@ export function openModal(id) {
   document.addEventListener("keydown", handleEscToClose);
 }
 
-/**
- * closeModal
- *
- * Hide modal, cleanup listeners, restore focus.
- */
 export function closeModal(id) {
   const modal = document.getElementById(id);
   if (!modal) return;
@@ -112,15 +80,9 @@ export function closeModal(id) {
 }
 
 /* ------------------------------------------------------------------
-   Small validation helpers
+   Validation Helpers
 ------------------------------------------------------------------- */
 
-/**
- * validateRequiredField
- * - trims value
- * - not empty
- * returns string or null
- */
 function validateRequiredField(inputEl, message) {
   const val = inputEl.value.trim();
   if (!val) {
@@ -131,12 +93,6 @@ function validateRequiredField(inputEl, message) {
   return val;
 }
 
-/**
- * validateNumberField
- * - parses float
- * - must be > 0
- * returns number or null
- */
 function validateNumberField(inputEl, message) {
   const num = parseFloat(inputEl.value);
   const ok = Number.isFinite(num) && num > 0;
@@ -149,7 +105,7 @@ function validateNumberField(inputEl, message) {
 }
 
 /* ------------------------------------------------------------------
-   Budget modal
+   Budget & Savings (Still LocalStorage for now)
 ------------------------------------------------------------------- */
 
 export function openBudgetModal() {
@@ -163,39 +119,21 @@ export function closeBudgetModal() {
 
 export function submitBudget(e) {
   e.preventDefault();
-
   const inputEl = $("#budget-input");
-  const newVal = validateNumberField(
-    inputEl,
-    "Please enter a valid budget greater than 0."
-  );
+  const newVal = validateNumberField(inputEl, "Enter valid budget > 0");
   if (newVal === null) return;
 
-  try {
-    state.budget = newVal;
+  state.budget = newVal;
+  $("#budget-amount").textContent = newVal.toLocaleString("en-PH", {
+    style: "currency",
+    currency: "PHP",
+  });
 
-    // immediate UI update
-    $("#budget-amount").textContent = newVal.toLocaleString("en-PH", {
-      style: "currency",
-      currency: "PHP",
-    });
-
-    // re-render dashboard + charts (safe)
-    safeRenderAndCharts();
-    updateAllTransactionsTable();
-
-    saveToLocalStorageSafe();
-    closeBudgetModal();
-    showNotification("Budget updated successfully!");
-  } catch (err) {
-    console.error("submitBudget failed:", err);
-    showNotification("⚠️ Couldn't update budget. Try again.");
-  }
+  safeRenderAndCharts();
+  saveToLocalStorageSafe(); // Saves only settings
+  closeBudgetModal();
+  showNotification("Budget updated!");
 }
-
-/* ------------------------------------------------------------------
-   Savings modal
-------------------------------------------------------------------- */
 
 export function openSavingsModal() {
   $("#savings-input").value = state.savingsGoal;
@@ -208,46 +146,29 @@ export function closeSavingsModal() {
 
 export function submitSavings(e) {
   e.preventDefault();
-
   const inputEl = $("#savings-input");
-  const newVal = validateNumberField(
-    inputEl,
-    "Please enter a valid savings goal greater than 0."
-  );
+  const newVal = validateNumberField(inputEl, "Enter valid goal > 0");
   if (newVal === null) return;
 
-  try {
-    state.savingsGoal = newVal;
+  state.savingsGoal = newVal;
+  $("#savings-goal").textContent = newVal.toLocaleString("en-PH", {
+    style: "currency",
+    currency: "PHP",
+  });
 
-    // immediate UI update
-    $("#savings-goal").textContent = newVal.toLocaleString("en-PH", {
-      style: "currency",
-      currency: "PHP",
-    });
-
-    // re-render dashboard + charts (safe)
-    safeRenderAndCharts();
-    updateAllTransactionsTable();
-
-    saveToLocalStorageSafe();
-    closeSavingsModal();
-    showNotification("Savings goal updated successfully!");
-  } catch (err) {
-    console.error("submitSavings failed:", err);
-    showNotification("⚠️ Couldn't update savings goal. Try again.");
-  }
+  safeRenderAndCharts();
+  saveToLocalStorageSafe();
+  closeSavingsModal();
+  showNotification("Savings goal updated!");
 }
 
 /* ------------------------------------------------------------------
-   All Transactions modal (full table view)
+   All Transactions Modal
 ------------------------------------------------------------------- */
 
 export function openAllTransactionsModal() {
   $("#transaction-search").value = "";
-
-  // start with full list
   state.filteredTransactions = [...state.expenses];
-
   updateAllTransactionsTable();
   openModal("all-transactions-modal");
 }
@@ -256,14 +177,8 @@ export function closeAllTransactionsModal() {
   closeModal("all-transactions-modal");
 }
 
-/**
- * searchTransactions
- *
- * Live filter for the All Transactions modal table.
- */
 export function searchTransactions(e) {
   const q = e.target.value.toLowerCase();
-
   state.filteredTransactions = q
     ? state.expenses.filter(
         (exp) =>
@@ -277,10 +192,11 @@ export function searchTransactions(e) {
 }
 
 /* ------------------------------------------------------------------
-   Edit Transaction modal
+   Edit Transaction (Currently Local-Only until PUT is implemented)
 ------------------------------------------------------------------- */
 
 export function openEditTransaction(id) {
+  // id is now a string from MongoDB
   const exp = state.expenses.find((x) => x.id === id);
   if (!exp) return;
 
@@ -297,68 +213,53 @@ export function closeEditTransactionModal() {
   closeModal("edit-transaction-modal");
 }
 
-/**
- * submitEditTransaction
- *
- * Save edits back into state, keep newest-first sort,
- * refresh UI/charts safely, persist to localStorage.
- */
 export function submitEditTransaction(e) {
   e.preventDefault();
 
-  const id = parseInt($("#edit-transaction-id").value, 10);
+  // ⚠️ Note: This currently only updates the UI locally.
+  // To make this permanent, you need to add a PUT route to server.js!
+
+  const id = $("#edit-transaction-id").value; // String ID
   const idx = state.expenses.findIndex((x) => x.id === id);
   if (idx === -1) return;
 
-  // validate fields
   const descEl = $("#edit-description");
-  const description = validateRequiredField(
-    descEl,
-    "Description cannot be empty."
-  );
+  const description = validateRequiredField(descEl, "Description cannot be empty.");
   if (description === null) return;
 
   const amtEl = $("#edit-amount");
-  const amount = validateNumberField(amtEl, "Amount must be greater than 0.");
+  const amount = validateNumberField(amtEl, "Amount must be > 0.");
   if (amount === null) return;
 
   const catEl = $("#edit-category");
-  const category = validateRequiredField(catEl, "Please choose a category.");
+  const category = validateRequiredField(catEl, "Choose a category.");
   if (category === null) return;
 
   const dateEl = $("#edit-date");
-  const date = validateRequiredField(dateEl, "Please select a valid date.");
+  const date = validateRequiredField(dateEl, "Select a valid date.");
   if (date === null) return;
 
-  try {
-    state.expenses[idx] = {
-      ...state.expenses[idx],
-      description,
-      amount,
-      category,
-      date,
-      timestamp: parseLocalDate(date).getTime(), // sortable
-    };
+  // Optimistic UI Update
+  state.expenses[idx] = {
+    ...state.expenses[idx],
+    description,
+    amount,
+    category,
+    date,
+    timestamp: parseLocalDate(date).getTime(),
+  };
 
-    // newest first
-    state.expenses.sort((a, b) => b.timestamp - a.timestamp);
-    state.filteredTransactions = [...state.expenses];
+  state.expenses.sort((a, b) => b.timestamp - a.timestamp);
+  state.filteredTransactions = [...state.expenses];
 
-    // Refresh UI and charts safely
-    safeRenderAndCharts();
-    updateAllTransactionsTable();
-
-    saveToLocalStorageSafe();
-    showNotification("Transaction updated successfully!");
-    closeEditTransactionModal();
-  } catch (err) {
-    console.error("submitEditTransaction failed:", err);
-    showNotification("⚠️ Couldn't update transaction. Try again.");
-  }
+  safeRenderAndCharts();
+  updateAllTransactionsTable();
+  closeEditTransactionModal();
+  showNotification("Transaction updated (Local Only)");
 }
 
 /* ------------------------------------------------------------------
-   Delete Transaction confirmation modal
+   Delete Transaction (CONNECTED TO DB)
 ------------------------------------------------------------------- */
 
 export function openDeleteTransaction(id) {
@@ -370,95 +271,105 @@ export function closeDeleteConfirmationModal() {
   closeModal("delete-confirmation-modal");
 }
 
-/**
- * confirmDeleteTransaction
- *
- * Remove a transaction and refresh.
- */
-export function confirmDeleteTransaction() {
-  const id = parseInt($("#delete-transaction-id").value, 10);
+export async function confirmDeleteTransaction() {
+  // 1. Get the ID (String)
+  const id = $("#delete-transaction-id").value;
+  const btn = $("#delete-confirm");
+
+  // UI Loading State
+  const originalText = btn.textContent;
+  btn.textContent = "Deleting...";
+  btn.disabled = true;
 
   try {
-    state.expenses = state.expenses.filter((x) => x.id !== id);
-    state.filteredTransactions = [...state.expenses];
+    // 2. Call API
+    const success = await deleteExpenseFromDB(id);
 
-    safeRenderAndCharts();
-    updateAllTransactionsTable();
+    if (success) {
+      // 3. Remove from State
+      state.expenses = state.expenses.filter((x) => x.id !== id);
+      state.filteredTransactions = [...state.expenses];
 
-    saveToLocalStorageSafe();
-    showNotification("Transaction deleted successfully!");
-    closeDeleteConfirmationModal();
+      safeRenderAndCharts();
+      updateAllTransactionsTable();
+      showNotification("Transaction deleted!");
+      closeDeleteConfirmationModal();
+    }
   } catch (err) {
-    console.error("confirmDeleteTransaction failed:", err);
-    showNotification("⚠️ Couldn't delete transaction. Try again.");
+    console.error("Delete failed", err);
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled = false;
   }
 }
 
 /* ------------------------------------------------------------------
-   Add New Expense form (sidebar)
+   Add New Expense (CONNECTED TO DB)
 ------------------------------------------------------------------- */
 
-/**
- * handleAddExpense
- *
- * Add a brand new expense from the sidebar form.
- * Includes validation, ordering, persistence, and UI refresh.
- */
-export function handleAddExpense(e) {
+export async function handleAddExpense(e) {
   e.preventDefault();
 
   const descEl = $("#expense-description");
   const amountEl = $("#expense-amount");
   const catEl = $("#expense-category");
   const dateEl = $("#expense-date");
+  const submitBtn = e.target.querySelector("button[type='submit']");
 
-  const description = validateRequiredField(
-    descEl,
-    "Please enter a description for this expense."
-  );
-  if (description === null) return;
+  const description = validateRequiredField(descEl, "Description required");
+  if (!description) return;
 
-  const amount = validateNumberField(
-    amountEl,
-    "Amount must be greater than 0."
-  );
-  if (amount === null) return;
+  const amount = validateNumberField(amountEl, "Amount must be > 0");
+  if (!amount) return;
 
-  const category = validateRequiredField(catEl, "Please choose a category.");
-  if (category === null) return;
+  const category = validateRequiredField(catEl, "Category required");
+  if (!category) return;
 
-  const date = validateRequiredField(dateEl, "Please select a valid date.");
-  if (date === null) return;
+  const date = validateRequiredField(dateEl, "Date required");
+  if (!date) return;
+
+  // UI Loading State
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = "Saving...";
+  submitBtn.disabled = true;
 
   try {
-    // add to state
-    state.expenses.push({
-      id: Date.now(),
+    // 1. Send to MongoDB
+    const newExpense = await addExpenseToDB({
       description,
       amount,
       category,
       date,
-      timestamp: parseLocalDate(date).getTime(),
     });
 
-    // newest first
-    state.expenses.sort((a, b) => b.timestamp - a.timestamp);
-    state.filteredTransactions = [...state.expenses];
+    if (newExpense) {
+      // 2. Add to State (Map Mongo _id to frontend id)
+      state.expenses.push({
+        id: newExpense._id, // IMPORTANT: Use the ID from the database!
+        description: newExpense.description,
+        amount: newExpense.amount,
+        category: newExpense.category,
+        date: newExpense.date.split("T")[0], // YYYY-MM-DD
+        timestamp: parseLocalDate(date).getTime(),
+      });
 
-    // redraw UI + charts
-    safeRenderAndCharts();
-    updateAllTransactionsTable();
+      // 3. Sort & Render
+      state.expenses.sort((a, b) => b.timestamp - a.timestamp);
+      state.filteredTransactions = [...state.expenses];
 
-    // persist
-    saveToLocalStorageSafe();
+      safeRenderAndCharts();
+      updateAllTransactionsTable();
 
-    // reset form + default date to today
-    $("#expense-form").reset();
-    $("#expense-date").valueAsDate = new Date();
+      // 4. Reset Form
+      $("#expense-form").reset();
+      $("#expense-date").valueAsDate = new Date();
 
-    showNotification("Expense added successfully!");
+      showNotification("Expense saved to database!");
+    }
   } catch (err) {
-    console.error("handleAddExpense failed:", err);
-    showNotification("⚠️ Couldn't add expense. Try again.");
+    console.error("Add failed", err);
+  } finally {
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
   }
 }
