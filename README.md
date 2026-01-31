@@ -82,7 +82,6 @@ BudgetBunny/
 ├─ server.js           # Express App & API Routes
 ├─ package.json        # Dependencies
 └─ README.md
-└─ README.md
 ```
 
 
