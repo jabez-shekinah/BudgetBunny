@@ -8,7 +8,7 @@ import {
 } from "./storage.js";
 
 /* ------------------------------------------------------------------
-   Accessible modal focus management
+    Accessible modal focus management
 ------------------------------------------------------------------- */
 
 let activeModal = null;
@@ -80,7 +80,7 @@ export function closeModal(id) {
 }
 
 /* ------------------------------------------------------------------
-   Validation Helpers
+    Validation Helpers
 ------------------------------------------------------------------- */
 
 function validateRequiredField(inputEl, message) {
@@ -105,7 +105,7 @@ function validateNumberField(inputEl, message) {
 }
 
 /* ------------------------------------------------------------------
-   Budget & Savings (Still LocalStorage for now)
+    Budget & Savings (Still LocalStorage for now)
 ------------------------------------------------------------------- */
 
 export function openBudgetModal() {
@@ -163,7 +163,7 @@ export function submitSavings(e) {
 }
 
 /* ------------------------------------------------------------------
-   All Transactions Modal
+    All Transactions Modal
 ------------------------------------------------------------------- */
 
 export function openAllTransactionsModal() {
@@ -192,7 +192,7 @@ export function searchTransactions(e) {
 }
 
 /* ------------------------------------------------------------------
-   Edit Transaction (Currently Local-Only until PUT is implemented)
+    Edit Transaction (Currently Local-Only until PUT is implemented)
 ------------------------------------------------------------------- */
 
 export function openEditTransaction(id) {
@@ -259,7 +259,7 @@ export function submitEditTransaction(e) {
 }
 
 /* ------------------------------------------------------------------
-   Delete Transaction (CONNECTED TO DB)
+    Delete Transaction (CONNECTED TO DB)
 ------------------------------------------------------------------- */
 
 export function openDeleteTransaction(id) {
@@ -304,7 +304,7 @@ export async function confirmDeleteTransaction() {
 }
 
 /* ------------------------------------------------------------------
-   Add New Expense (CONNECTED TO DB)
+    Add New Expense (CONNECTED TO DB)
 ------------------------------------------------------------------- */
 
 export async function handleAddExpense(e) {

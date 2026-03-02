@@ -1,10 +1,13 @@
 // Imports the necessary tools (packages)
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/User");
-require("dotenv").config();
+const session = require("express-session");
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 // Connect to MongoDB Atlas
 mongoose
@@ -22,6 +25,75 @@ app.use(cors());
 app.use(express.json());
 // Serve Static Files (CSS, JS, Images) from 'public' folder
 app.use(express.static(path.join(__dirname, "public")));
+
+// 1. Session Middleware (Required for Passport)
+app.use(
+  session({
+    secret: "budgetbunny_secret_key", // You can move this to .env later
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+// 2. Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// 3. Serialize & Deserialize (How Passport saves the user in the session)
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err, null);
+  }
+});
+
+// 4. The Google Strategy
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        // Check if user already exists
+        let user = await User.findOne({ googleId: profile.id });
+
+        if (user) {
+          return done(null, user); // User exists, log them in
+        }
+
+        // Check if they registered locally with the same email
+        user = await User.findOne({ email: profile.emails[0].value });
+
+        if (user) {
+          // Link Google ID to existing local account
+          user.googleId = profile.id;
+          await user.save();
+          return done(null, user);
+        }
+
+        // If no user exists, create a new one!
+        const newUser = new User({
+          googleId: profile.id,
+          name: profile.displayName,
+          email: profile.emails[0].value,
+          // Notice: No password needed!
+        });
+
+        await newUser.save();
+        done(null, newUser);
+      } catch (err) {
+        console.error(err);
+        done(err, null);
+      }
+    }
+  )
+);
 
 // -------------------------------------------------------
 // AUTHENTICATION ROUTES (API)
@@ -161,6 +233,33 @@ app.get("/register", (req, res) => {
 app.get("/api/test", (req, res) => {
   res.json({ message: "Backend is running successfully!" });
 });
+
+// --- GOOGLE OAUTH ROUTES ---
+
+// 1. Send the user to Google to authenticate
+app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+
+// 2. Google sends the user back to this URL
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  (req, res) => {
+    // SUCCESS! Logged in.
+    // Redirect them to the dashboard.
+    // We send the user data to the frontend so localStorage can catch it.
+    const userData = JSON.stringify({
+      id: req.user._id,
+      fullname: req.user.fullname,
+      email: req.user.email,
+    });
+    res.send(`
+      <script>
+        localStorage.setItem('user', '${userData}');
+        window.location.href = '/'; // Redirect to your index.html/dashboard
+      </script>
+    `);
+  }
+);
 
 // -------------------------------------------------------
 // START SERVER

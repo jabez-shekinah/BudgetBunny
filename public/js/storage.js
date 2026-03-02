@@ -5,7 +5,7 @@ import { safeRenderAndCharts } from "./safe.js";
 const API_BASE = "/api/expenses";
 
 /* ------------------------------------------------------------------
-   API HELPERS (The Bridge to MongoDB)
+    API HELPERS (The Bridge to MongoDB)
 ------------------------------------------------------------------- */
 
 /**
@@ -65,7 +65,7 @@ export async function deleteExpenseFromDB(id) {
 }
 
 /* ------------------------------------------------------------------
-   Load Data (The Switch from LocalStorage to API)
+    Load Data (The Switch from LocalStorage to API)
 ------------------------------------------------------------------- */
 
 /**
@@ -133,7 +133,7 @@ export async function loadFromLocalStorage() {
 }
 
 /* ------------------------------------------------------------------
-   Save Data
+    Save Data
 ------------------------------------------------------------------- */
 
 /**
@@ -158,7 +158,7 @@ export function saveToLocalStorageSafe() {
 }
 
 /* ------------------------------------------------------------------
-   Export Data (Keep as Utility)
+    Export Data (Keep as Utility)
 ------------------------------------------------------------------- */
 
 export function exportDataJSON() {
@@ -191,7 +191,7 @@ export function exportDataJSON() {
 }
 
 /* ------------------------------------------------------------------
-   Import Data (Cloud Migration)
+    Import Data (Cloud Migration)
 ------------------------------------------------------------------- */
 
 /**
