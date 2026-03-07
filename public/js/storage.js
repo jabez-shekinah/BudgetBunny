@@ -24,26 +24,21 @@ function getCurrentUserId() {
  * Storage.addExpense (CREATE)
  * Sends a new expense to the server
  */
+// storage.js
 export async function addExpenseToDB(expenseData) {
   const userId = getCurrentUserId();
-  if (!userId) {
-    showNotification("⚠️ You must be logged in to save expenses.");
-    return null;
-  }
+  if (!userId) return null;
 
   try {
     const res = await fetch(API_BASE, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      // Ensure userId is explicitly included in the payload
       body: JSON.stringify({ ...expenseData, userId }),
     });
-
-    if (!res.ok) throw new Error("Server rejected the expense");
-
-    return await res.json(); // Returns the saved expense (with _id)
+    return await res.json();
   } catch (err) {
-    console.error("API Error:", err);
-    showNotification("⚠️ Failed to save expense to server.");
+    console.error("Add failed:", err);
     return null;
   }
 }
@@ -111,6 +106,7 @@ export async function loadFromLocalStorage() {
           category: e.category,
           date: new Date(e.date).toISOString().split("T")[0], // format YYYY-MM-DD
           timestamp: new Date(e.date).getTime(),
+          receiptUrl: e.receiptUrl,
         }));
       }
     } catch (err) {

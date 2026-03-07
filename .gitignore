@@ -8,3 +8,5 @@ Thumbs.db
 # Ignore environment variables (Protect my passwords!)
 .env
 
+# Ignore Firebase Admin SDK service account key
+firebase-key.json

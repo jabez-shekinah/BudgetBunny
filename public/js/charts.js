@@ -14,7 +14,7 @@
 import { state, parseLocalDate, niceScale } from "./state.js";
 
 /* ------------------------------------------------------------------
-   Private helpers
+  Private helpers
 ------------------------------------------------------------------- */
 
 /**
@@ -118,7 +118,7 @@ function _getExpenseChartData() {
 }
 
 /* ------------------------------------------------------------------
-   Public: init + update charts
+  Public: init + update charts
 ------------------------------------------------------------------- */
 
 /**
@@ -179,9 +179,7 @@ export function initializeCharts() {
       },
     });
 
-    const categoryCtx = document
-      .getElementById("categoryChart")
-      .getContext("2d");
+    const categoryCtx = document.getElementById("categoryChart").getContext("2d");
 
     state.categoryChart = new Chart(categoryCtx, {
       type: "doughnut",
@@ -287,9 +285,7 @@ export function updateCategoryChart() {
     Object.entries(totals).forEach(([cat, amt]) => {
       labels.push(cat);
       data.push(amt);
-      colors.push(
-        state.categoryColors[cat]?.bg || state.categoryColors.other.bg
-      );
+      colors.push(state.categoryColors[cat]?.bg || state.categoryColors.other.bg);
     });
 
     state.categoryChart.data.labels = labels;
@@ -313,7 +309,7 @@ export function updateCharts() {
 }
 
 /* ------------------------------------------------------------------
-   Time period selector
+  Time period selector
 ------------------------------------------------------------------- */
 
 /**
@@ -338,7 +334,7 @@ export function changeTimePeriod(period) {
 }
 
 /* ------------------------------------------------------------------
-   Theme sync
+  Theme sync
 ------------------------------------------------------------------- */
 
 /**
@@ -349,9 +345,7 @@ export function changeTimePeriod(period) {
  */
 export function refreshChartsTheme() {
   const textColor = state.darkMode ? "#f3f4f6" : "#374151";
-  const gridColor = state.darkMode
-    ? "rgba(255,255,255,0.1)"
-    : "rgba(0,0,0,0.05)";
+  const gridColor = state.darkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)";
 
   // Line chart
   if (state.expenseChart) {
