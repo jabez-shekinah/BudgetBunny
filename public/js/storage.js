@@ -5,7 +5,7 @@ import { safeRenderAndCharts } from "./safe.js";
 const API_BASE = "/api/expenses";
 
 /* ------------------------------------------------------------------
-   API HELPERS (The Bridge to MongoDB)
+    API HELPERS (The Bridge to MongoDB)
 ------------------------------------------------------------------- */
 
 /**
@@ -24,26 +24,21 @@ function getCurrentUserId() {
  * Storage.addExpense (CREATE)
  * Sends a new expense to the server
  */
+// storage.js
 export async function addExpenseToDB(expenseData) {
   const userId = getCurrentUserId();
-  if (!userId) {
-    showNotification("⚠️ You must be logged in to save expenses.");
-    return null;
-  }
+  if (!userId) return null;
 
   try {
     const res = await fetch(API_BASE, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      // Ensure userId is explicitly included in the payload
       body: JSON.stringify({ ...expenseData, userId }),
     });
-
-    if (!res.ok) throw new Error("Server rejected the expense");
-
-    return await res.json(); // Returns the saved expense (with _id)
+    return await res.json();
   } catch (err) {
-    console.error("API Error:", err);
-    showNotification("⚠️ Failed to save expense to server.");
+    console.error("Add failed:", err);
     return null;
   }
 }
@@ -65,7 +60,7 @@ export async function deleteExpenseFromDB(id) {
 }
 
 /* ------------------------------------------------------------------
-   Load Data (The Switch from LocalStorage to API)
+    Load Data (The Switch from LocalStorage to API)
 ------------------------------------------------------------------- */
 
 /**
@@ -111,6 +106,7 @@ export async function loadFromLocalStorage() {
           category: e.category,
           date: new Date(e.date).toISOString().split("T")[0], // format YYYY-MM-DD
           timestamp: new Date(e.date).getTime(),
+          receiptUrl: e.receiptUrl,
         }));
       }
     } catch (err) {
@@ -133,7 +129,7 @@ export async function loadFromLocalStorage() {
 }
 
 /* ------------------------------------------------------------------
-   Save Data
+    Save Data
 ------------------------------------------------------------------- */
 
 /**
@@ -158,7 +154,7 @@ export function saveToLocalStorageSafe() {
 }
 
 /* ------------------------------------------------------------------
-   Export Data (Keep as Utility)
+    Export Data (Keep as Utility)
 ------------------------------------------------------------------- */
 
 export function exportDataJSON() {
@@ -191,7 +187,7 @@ export function exportDataJSON() {
 }
 
 /* ------------------------------------------------------------------
-   Import Data (Cloud Migration)
+    Import Data (Cloud Migration)
 ------------------------------------------------------------------- */
 
 /**

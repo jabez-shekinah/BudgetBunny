@@ -8,7 +8,7 @@ import {
 } from "./storage.js";
 
 /* ------------------------------------------------------------------
-   Accessible modal focus management
+    Accessible modal focus management
 ------------------------------------------------------------------- */
 
 let activeModal = null;
@@ -80,7 +80,7 @@ export function closeModal(id) {
 }
 
 /* ------------------------------------------------------------------
-   Validation Helpers
+    Validation Helpers
 ------------------------------------------------------------------- */
 
 function validateRequiredField(inputEl, message) {
@@ -105,7 +105,7 @@ function validateNumberField(inputEl, message) {
 }
 
 /* ------------------------------------------------------------------
-   Budget & Savings (Still LocalStorage for now)
+    Budget & Savings (Still LocalStorage for now)
 ------------------------------------------------------------------- */
 
 export function openBudgetModal() {
@@ -163,7 +163,7 @@ export function submitSavings(e) {
 }
 
 /* ------------------------------------------------------------------
-   All Transactions Modal
+    All Transactions Modal
 ------------------------------------------------------------------- */
 
 export function openAllTransactionsModal() {
@@ -192,11 +192,11 @@ export function searchTransactions(e) {
 }
 
 /* ------------------------------------------------------------------
-   Edit Transaction (Currently Local-Only until PUT is implemented)
+    Edit Transaction (Currently Local-Only until PUT is implemented)
 ------------------------------------------------------------------- */
 
 export function openEditTransaction(id) {
-  // id is now a string from MongoDB
+  // id is the string _id from MongoDB
   const exp = state.expenses.find((x) => x.id === id);
   if (!exp) return;
 
@@ -206,6 +206,14 @@ export function openEditTransaction(id) {
   $("#edit-category").value = exp.category;
   $("#edit-date").value = exp.date;
 
+  // NEW: Reset the file label when opening the modal
+  const fileLabel = $("#edit-file-label");
+  if (fileLabel) fileLabel.textContent = "No file chosen";
+
+  // Clear any previously selected file from the hidden input
+  const fileInput = $("#edit-receipt");
+  if (fileInput) fileInput.value = "";
+
   openModal("edit-transaction-modal");
 }
 
@@ -213,13 +221,10 @@ export function closeEditTransactionModal() {
   closeModal("edit-transaction-modal");
 }
 
-export function submitEditTransaction(e) {
+export async function submitEditTransaction(e) {
   e.preventDefault();
 
-  // ⚠️ Note: This currently only updates the UI locally.
-  // To make this permanent, you need to add a PUT route to server.js!
-
-  const id = $("#edit-transaction-id").value; // String ID
+  const id = $("#edit-transaction-id").value;
   const idx = state.expenses.findIndex((x) => x.id === id);
   if (idx === -1) return;
 
@@ -239,27 +244,80 @@ export function submitEditTransaction(e) {
   const date = validateRequiredField(dateEl, "Select a valid date.");
   if (date === null) return;
 
-  // Optimistic UI Update
-  state.expenses[idx] = {
-    ...state.expenses[idx],
-    description,
-    amount,
-    category,
-    date,
-    timestamp: parseLocalDate(date).getTime(),
-  };
+  // NEW: Grab the edit file input
+  const receiptEl = $("#edit-receipt");
+  const submitBtn = e.target.querySelector("button[type='submit']");
 
-  state.expenses.sort((a, b) => b.timestamp - a.timestamp);
-  state.filteredTransactions = [...state.expenses];
+  // UI Loading State
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = "Updating...";
+  submitBtn.disabled = true;
 
-  safeRenderAndCharts();
-  updateAllTransactionsTable();
-  closeEditTransactionModal();
-  showNotification("Transaction updated (Local Only)");
+  try {
+    let newReceiptUrl = null;
+
+    // 1. If a NEW file was selected during the edit, upload it to Firebase first
+    if (receiptEl && receiptEl.files.length > 0) {
+      const formData = new FormData();
+      formData.append("receipt", receiptEl.files[0]);
+
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadRes.ok) throw new Error("Image upload failed");
+
+      const uploadData = await uploadRes.json();
+      newReceiptUrl = uploadData.imageUrl;
+    }
+
+    // 2. Call the PUT API to update MongoDB
+    const res = await fetch(`/api/expenses/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        description,
+        amount,
+        category,
+        date,
+        receiptUrl: newReceiptUrl, // Backend keeps old URL if this is null
+      }),
+    });
+
+    if (!res.ok) throw new Error("Update failed on server");
+    const updatedExpense = await res.json();
+
+    // 3. Update Global State with the data returned from the server
+    state.expenses[idx] = {
+      ...state.expenses[idx],
+      description: updatedExpense.description,
+      amount: updatedExpense.amount,
+      category: updatedExpense.category,
+      date: updatedExpense.date.split("T")[0],
+      receiptUrl: updatedExpense.receiptUrl, // Correctly updated or preserved
+      timestamp: parseLocalDate(date).getTime(),
+    };
+
+    // 4. Sort and Refresh UI
+    state.expenses.sort((a, b) => b.timestamp - a.timestamp);
+    state.filteredTransactions = [...state.expenses];
+
+    safeRenderAndCharts();
+    updateAllTransactionsTable();
+    closeEditTransactionModal();
+    showNotification("Transaction updated successfully!");
+  } catch (err) {
+    console.error("Update failed", err);
+    showNotification("⚠️ Error: " + err.message);
+  } finally {
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+  }
 }
 
 /* ------------------------------------------------------------------
-   Delete Transaction (CONNECTED TO DB)
+    Delete Transaction (CONNECTED TO DB)
 ------------------------------------------------------------------- */
 
 export function openDeleteTransaction(id) {
@@ -304,7 +362,7 @@ export async function confirmDeleteTransaction() {
 }
 
 /* ------------------------------------------------------------------
-   Add New Expense (CONNECTED TO DB)
+    Add New Expense (CONNECTED TO DB)
 ------------------------------------------------------------------- */
 
 export async function handleAddExpense(e) {
@@ -314,6 +372,8 @@ export async function handleAddExpense(e) {
   const amountEl = $("#expense-amount");
   const catEl = $("#expense-category");
   const dateEl = $("#expense-date");
+  // NEW: Grab the receipt file input
+  const receiptEl = $("#receipt");
   const submitBtn = e.target.querySelector("button[type='submit']");
 
   const description = validateRequiredField(descEl, "Description required");
@@ -330,37 +390,60 @@ export async function handleAddExpense(e) {
 
   // UI Loading State
   const originalText = submitBtn.textContent;
-  submitBtn.textContent = "Saving...";
+  // NEW: Update text so the user knows an image is uploading
+  submitBtn.textContent = "Uploading & Saving...";
   submitBtn.disabled = true;
 
   try {
-    // 1. Send to MongoDB
+    let receiptUrl = null;
+
+    // NEW: 1. Upload the image to Firebase via our backend IF a file was selected
+    if (receiptEl && receiptEl.files.length > 0) {
+      const formData = new FormData();
+      formData.append("receipt", receiptEl.files[0]);
+
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        body: formData, // The browser automatically sets the correct multipart/form-data headers!
+      });
+
+      if (!uploadRes.ok) {
+        throw new Error("Failed to upload receipt image");
+      }
+
+      const uploadData = await uploadRes.json();
+      receiptUrl = uploadData.imageUrl; // Grab the public Firebase URL
+    }
+
+    // 2. Send to MongoDB
     const newExpense = await addExpenseToDB({
       description,
       amount,
       category,
       date,
+      receiptUrl, // NEW: Pass the Firebase URL to your database save function!
     });
 
     if (newExpense) {
-      // 2. Add to State (Map Mongo _id to frontend id)
+      // 3. Add to State (Map Mongo _id to frontend id)
       state.expenses.push({
-        id: newExpense._id, // IMPORTANT: Use the ID from the database!
+        id: newExpense._id,
         description: newExpense.description,
         amount: newExpense.amount,
         category: newExpense.category,
-        date: newExpense.date.split("T")[0], // YYYY-MM-DD
+        date: newExpense.date.split("T")[0],
         timestamp: parseLocalDate(date).getTime(),
+        receiptUrl: newExpense.receiptUrl, // NEW: Add it to the local UI state
       });
 
-      // 3. Sort & Render
+      // 4. Sort & Render
       state.expenses.sort((a, b) => b.timestamp - a.timestamp);
       state.filteredTransactions = [...state.expenses];
 
       safeRenderAndCharts();
       updateAllTransactionsTable();
 
-      // 4. Reset Form
+      // 5. Reset Form
       $("#expense-form").reset();
       $("#expense-date").valueAsDate = new Date();
 
@@ -368,6 +451,8 @@ export async function handleAddExpense(e) {
     }
   } catch (err) {
     console.error("Add failed", err);
+    // NEW: Alert the user if the image upload fails
+    alert("Error saving expense: " + err.message);
   } finally {
     submitBtn.textContent = originalText;
     submitBtn.disabled = false;
