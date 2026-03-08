@@ -619,11 +619,9 @@
                     />
                   </div>
 
-                  <!-- Add File -->
-                  <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                      Attach Receipt (Optional)
-                    </label>
+                  <!-- Attach Receipt -->
+                  <div class="form__group">
+                    <label class="form__label">Attach Receipt (Optional)</label>
                     <div class="flex items-center gap-3">
                       <button
                         type="button"
@@ -992,35 +990,34 @@
                 required
               />
             </div>
-          </div>
 
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1"
-              >Update Receipt (Optional)</label
-            >
-            <div class="flex items-center gap-3">
-              <button
-                type="button"
-                onclick="document.getElementById('edit-receipt').click()"
-                class="py-2 px-4 rounded-md border-0 text-sm font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 cursor-pointer"
-              >
-                Choose File
-              </button>
-              <span id="edit-file-label" class="text-sm text-gray-500"
-                >No file chosen</span
-              >
+            <!-- Update Receipt -->
+            <div class="form__group">
+              <label class="form__label">Update Receipt (Optional)</label>
+              <div class="flex items-center gap-3">
+                <button
+                  type="button"
+                  onclick="document.getElementById('edit-receipt').click()"
+                  class="py-2 px-4 rounded-md border-0 text-sm font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 cursor-pointer"
+                >
+                  Choose File
+                </button>
+                <span id="edit-file-label" class="text-sm text-gray-500"
+                  >No file chosen</span
+                >
+              </div>
+              <input
+                type="file"
+                id="edit-receipt"
+                name="receipt"
+                accept="image/png, image/jpeg, image/jpg"
+                class="hidden"
+                onchange="
+                  document.getElementById('edit-file-label').textContent =
+                    this.files[0]?.name || 'No file chosen'
+                "
+              />
             </div>
-            <input
-              type="file"
-              id="edit-receipt"
-              name="receipt"
-              accept="image/png, image/jpeg, image/jpg"
-              class="hidden"
-              onchange="
-                document.getElementById('edit-file-label').textContent =
-                  this.files[0]?.name || 'No file chosen'
-              "
-            />
           </div>
 
           <div class="modal__footer flex justify-end gap-3 mt-6">

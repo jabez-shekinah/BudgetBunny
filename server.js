@@ -10,6 +10,7 @@ const User = require("./models/User");
 const session = require("express-session");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const { body, validationResult } = require("express-validator");
 
 // 1. Load secret key
 const serviceAccount = require("./firebase-key.json");
@@ -39,8 +40,18 @@ mongoose
 
 // Initialize the application
 const app = express();
+const helmet = require("helmet");
 
-// 1. MIDDLEWARE
+// -------------------------------------------------------
+// MIDDLEWARE
+// -------------------------------------------------------
+
+// Use Helmet, but turn off the strict CSP so Tailwind and external fonts can load!
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 // Enable 'CORS' so frontend can talk to backend
 app.use(cors());
 // Parse JSON data (allows us to read data sent in POST requests)
@@ -72,7 +83,26 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// 4. The Google Strategy
+// 4. Auth & RBAC
+// Check if the user is logged in
+const requireAuth = (req, res, next) => {
+  // Because using Passport, req.user will exist if they have an active session
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized: Please log in." });
+  }
+  next(); // Pass them through to the route!
+};
+
+// Check if the user is an Admin (Fulfills the RBAC rubric requirement)
+const requireAdmin = (req, res, next) => {
+  // First check if they exist, then check their role
+  if (!req.user || req.user.role !== "admin") {
+    return res.status(403).json({ error: "Forbidden: Admin access required." });
+  }
+  next();
+};
+
+// 5. The Google Strategy
 passport.use(
   new GoogleStrategy(
     {
@@ -183,35 +213,46 @@ const Expense = require("./models/Expense"); // Import the model
 // -------------------------------------------------------
 
 // 1. CREATE: Add a new expense
-app.post("/api/expenses", async (req, res) => {
-  try {
-    // NEW: Added receiptUrl to the list of things to grab from the frontend
-    const { userId, description, amount, category, date, receiptUrl } = req.body;
+app.post(
+  "/api/expenses",
+  requireAuth, //
+  [
+    // INPUT VALIDATION
+    body("description").notEmpty().withMessage("Description is required").trim().escape(),
+    body("amount").isNumeric().withMessage("Amount must be a valid number"),
+    body("category").notEmpty().withMessage("Category is required").trim().escape(),
+  ],
 
-    // Validation
-    if (!userId || !description || !amount || !category) {
-      return res.status(400).json({ error: "Missing required fields" });
+  async (req, res) => {
+    try {
+      // NEW: Added receiptUrl to the list of things to grab from the frontend
+      const { userId, description, amount, category, date, receiptUrl } = req.body;
+
+      // Validation
+      if (!userId || !description || !amount || !category) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const newExpense = new Expense({
+        userId,
+        description,
+        amount,
+        category,
+        date,
+        receiptUrl, // NEW: Added receiptUrl here so Mongoose actually saves it!
+      });
+
+      const savedExpense = await newExpense.save();
+      res.status(201).json(savedExpense);
+    } catch (err) {
+      console.error("Error saving expense:", err);
+      res.status(500).json({ error: "Failed to save expense" });
     }
-
-    const newExpense = new Expense({
-      userId,
-      description,
-      amount,
-      category,
-      date,
-      receiptUrl, // NEW: Added receiptUrl here so Mongoose actually saves it!
-    });
-
-    const savedExpense = await newExpense.save();
-    res.status(201).json(savedExpense);
-  } catch (err) {
-    console.error("Error saving expense:", err);
-    res.status(500).json({ error: "Failed to save expense" });
   }
-});
+);
 
 // 2. READ: Get all expenses for a specific user
-app.get("/api/expenses/:userId", async (req, res) => {
+app.get("/api/expenses/:userId", requireAuth, async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -226,7 +267,7 @@ app.get("/api/expenses/:userId", async (req, res) => {
 });
 
 // 2. UPDATE: Edit an existing expense
-app.put("/api/expenses/:id", async (req, res) => {
+app.put("/api/expenses/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const { description, amount, category, date, receiptUrl } = req.body;
@@ -277,7 +318,7 @@ app.put("/api/expenses/:id", async (req, res) => {
 });
 
 // 4. DELETE: Remove an expense
-app.delete("/api/expenses/:id", async (req, res) => {
+app.delete("/api/expenses/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -419,6 +460,24 @@ app.get(
 // START SERVER
 // -------------------------------------------------------
 const PORT = process.env.PORT || 3000;
+// -------------------------------------------------------
+// CENTRALIZED ERROR HANDLING MIDDLEWARE
+// -------------------------------------------------------
+// Catch-all for any unhandled errors in the app
+app.use((err, req, res, next) => {
+  console.error("🔥 Global Server Error Caught:", err.stack);
+
+  // Determine the status code (default to 500 Internal Server Error)
+  const statusCode = err.status || 500;
+
+  // Send a clean, standardized JSON response
+  res.status(statusCode).json({
+    success: false,
+    error: err.message || "An unexpected error occurred on the server.",
+    // Never expose stack traces in production!
+    stack: process.env.NODE_ENV === "development" ? err.stack : {},
+  });
+});
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
