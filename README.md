@@ -36,14 +36,15 @@ It allows users to:
 ## Key Features
 
 ### Security & Authentication
-- **User Registration/Login:** Session-based authentication using Express.
-- **Data Isolation:** Users can only view and manage their own expenses.
-- **Password Hashing:** (Planned/Ready for implementation).
+- **Google OAuth 2.0:** Secure, passwordless login using Passport.js and Google Identity Services.
+- **Role-Based Access Control (RBAC):** Middleware protecting API routes, with user and admin roles established in the database.
+- **API Security:** Hardened HTTP headers using Helmet.js and server-side input sanitization via `express-validator`.
+- **Centralized Error Handling:** Prevents server crashes and hides sensitive stack traces from the client.
 
-### Cloud & Database
-- **MongoDB Atlas Integration:** All expenses are stored in a scalable cloud database.
-- **CRUD Operations:** Create, Read, and Delete expenses directly from the server.
-- **Bulk Import/Migration:** Upload a JSON file to batch-process and save expenses to the database instantly.
+### Cloud Storage & Database
+- **MongoDB Atlas:** All financial records are stored in a scalable NoSQL cloud database.
+- **Firebase Storage Integration:** Users can securely upload and attach receipt images (`.png`, `.jpg`) to their transactions.
+- **Smart Cloud Cleanup:** Auto-deletion logic ensures old or orphaned receipt images are automatically purged from the Firebase bucket when an expense is updated or deleted.
 
 ### Dashboard & Analytics
 - **Dynamic Charts:** Real-time updates using Chart.js.
@@ -60,7 +61,10 @@ It allows users to:
 | **Styling** | Tailwind CSS | Utility-first responsive design |
 | **Backend** | Node.js + Express | RESTful API server |
 | **Database** | MongoDB + Mongoose | NoSQL schema-based data storage |
-| **Visualization** | Chart.js | Interactive data rendering |
+| **Cloud Storage**| Firebase Admin SDK| Secure cloud bucket for receipt image hosting |
+| **Authentication**| Passport.js (Google)| OAuth 2.0 session management |
+| **Security** | Helmet & Express-Validator| HTTP header protection and input sanitization |
+| **Visualization**| Chart.js | Interactive data rendering |
 
 ---
 
@@ -69,19 +73,22 @@ It allows users to:
 ```plaintext
 BudgetBunny/
 ├─ models/
-│  ├─ User.js          # Mongoose Schema for Users
-│  └─ Expense.js       # Mongoose Schema for Expenses
+│  ├─ User.js          # Mongoose Schema (Includes Google OAuth ID & RBAC roles)
+│  └─ Expense.js       # Mongoose Schema (Includes Firebase receipt URLs)
 ├─ public/             # Client-Side Code
 │  ├─ js/
-│  │  ├─ main.js       # Entry point (Async/Await)
-│  │  ├─ storage.js    # API Bridge (Fetch Calls)
-│  │  └─ ...
+│  │  ├─ main.js       # App entry point & initialization
+│  │  ├─ storage.js    # API Bridge (Fetch calls for Auth, CRUD, & File Uploads)
+│  │  ├─ ui.js         # DOM updates and UI rendering
+│  │  └─ modals.js     # Handles form submissions and receipt attachments
 │  ├─ styles/
-│  └─ index.html
-├─ .env                # Secrets (MONGO_URI)
-├─ server.js           # Express App & API Routes
-├─ package.json        # Dependencies
-└─ README.md
+│  └─ index.html       # Main application interface
+├─ .env                # Environment Secrets (MONGO_URI, Google Keys, Session Secret)
+├─ .gitignore          # Security file (Ignores .env and firebase-key.json)
+├─ firebase-key.json   # Firebase Admin SDK service account key (NOT COMMITTED)
+├─ server.js           # Express Server, Middleware, Auth, & Protected API Routes
+├─ package.json        # Dependencies (Passport, Multer, Helmet, Firebase-Admin)
+└─ README.md           # Project Documentation
 ```
 
 
@@ -163,7 +170,10 @@ npm install
 Create a `.env` file in the root directory:
 ```env
 MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/testDB?retryWrites=true&w=majority
-PORT=3000
+PORT=5000
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+SESSION_SECRET=your_random_session_secret
 ```
 
 4. Run the Server
@@ -179,11 +189,19 @@ The server will start on `http://localhost:3000`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/register` | Create a new user account. |
-| POST | `/api/login` | Authenticate user & start session. |
+| **Authentication (Local)** | | |
+| POST | `/api/register` | Create a new user account with email and password. |
+| POST | `/api/login` | Authenticate user via email/password & start session. |
+| **Authentication (Google OAuth)** | | |
+| GET | `/auth/google` | Initiates the Google OAuth 2.0 login flow. |
+| GET | `/auth/google/callback` | OAuth callback route to establish the user session. |
+| GET | `/auth/current_user` | Returns the currently authenticated user's profile data. |
+| GET | `/auth/logout` | Destroys the session and logs the user out. |
+| **Expenses (Protected Routes)** | | |
 | GET | `/api/expenses/:userId` | Fetch all expenses for a specific user. |
-| POST | `/api/expenses` | Save a new expense to the database. |
-| DELETE | `/api/expenses/:id` | Permanently remove an expense. |
+| POST | `/api/expenses` | Save a new expense and Firebase receipt URL to the database. |
+| PUT | `/api/expenses/:id` | Update an expense and auto-replace cloud receipts. |
+| DELETE | `/api/expenses/:id` | Permanently remove an expense and purge its Firebase receipt. |
 
 ---
 
