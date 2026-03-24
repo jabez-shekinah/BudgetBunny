@@ -184,25 +184,21 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // Find user by email
     const user = await User.findOne({ email });
-    if (!user) {
+
+    if (!user || user.password !== password) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    // Check password
-    if (user.password !== password) {
-      return res.status(400).json({ error: "Invalid email or password" });
-    }
-
-    res.json({
-      message: "Login successful",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
+    // Fix: Explicitly establishes the Passport session
+    req.logIn(user, (err) => {
+      if (err) {
+        return res.status(500).json({ error: "Login session error" });
+      }
+      res.json({
+        message: "Login successful",
+        user: { id: user._id, name: user.name, email: user.email },
+      });
     });
   } catch (error) {
     console.error("Login Error:", error);
