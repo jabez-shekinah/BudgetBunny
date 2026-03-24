@@ -231,18 +231,21 @@ The server will start on `http://localhost:3000`.
 
 ## API Documentation
 
-| Method                          | Endpoint                | Description                                                                          |
-| ------------------------------- | ----------------------- | ------------------------------------------------------------------------------------ |
-| **Authentication**              |                         |                                                                                      |
-| GET                             | `/auth/google`          | Initiates the Google OAuth 2.0 login flow.                                           |
-| GET                             | `/auth/google/callback` | OAuth callback route to establish the user session.                                  |
-| GET                             | `/auth/current_user`    | Returns the currently authenticated user's profile data.                             |
-| GET                             | `/auth/logout`          | Destroys the session and logs the user out.                                          |
-| **Expenses (Protected Routes)** |                         |                                                                                      |
-| GET                             | `/api/expenses/:userId` | Fetch all expenses for a specific user.                                              |
-| POST                            | `/api/expenses`         | Save a new expense and upload receipt to Firebase.                                   |
-| PUT                             | `/api/expenses/:id`     | Update an expense. Automatically replaces the old Firebase receipt with the new one. |
-| DELETE                          | `/api/expenses/:id`     | Remove an expense and purge its associated Firebase receipt.                         |
+| Method                            | Endpoint                | Description                                                                          |
+| --------------------------------- | ----------------------- | ------------------------------------------------------------------------------------ |
+| **Authentication (Local)**        |                         |                                                                                      |
+| POST                              | `/api/register`         | Create a new user account with email and password.                                   |
+| POST                              | `/api/login`            | Authenticate user via email/password & start session.                                |
+| **Authentication (Google OAuth)** |                         |                                                                                      |
+| GET                               | `/auth/google`          | Initiates the Google OAuth 2.0 login flow.                                           |
+| GET                               | `/auth/google/callback` | OAuth callback route to establish the user session.                                  |
+| GET                               | `/auth/current_user`    | Returns the currently authenticated user's profile data.                             |
+| GET                               | `/auth/logout`          | Destroys the session and logs the user out.                                          |
+| **Expenses (Protected Routes)**   |                         |                                                                                      |
+| GET                               | `/api/expenses/:userId` | Fetch all expenses for a specific user.                                              |
+| POST                              | `/api/expenses`         | Save a new expense and upload receipt to Firebase.                                   |
+| PUT                               | `/api/expenses/:id`     | Update an expense. Automatically replaces the old Firebase receipt with the new one. |
+| DELETE                            | `/api/expenses/:id`     | Remove an expense and purge its associated Firebase receipt.                         |
 
 ---
 
