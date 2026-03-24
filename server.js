@@ -457,10 +457,6 @@ app.get(
 );
 
 // -------------------------------------------------------
-// START SERVER
-// -------------------------------------------------------
-const PORT = process.env.PORT || 3000;
-// -------------------------------------------------------
 // CENTRALIZED ERROR HANDLING MIDDLEWARE
 // -------------------------------------------------------
 // Catch-all for any unhandled errors in the app
@@ -478,6 +474,18 @@ app.use((err, req, res, next) => {
     stack: process.env.NODE_ENV === "development" ? err.stack : {},
   });
 });
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+
+// -------------------------------------------------------
+// START SERVER (Modified for Jest Testing)
+// -------------------------------------------------------
+const PORT = process.env.PORT || 3000;
+
+// Only bind to the port if we are NOT running an automated test
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+  });
+}
+
+// Export the app so Jest and Supertest can use it
+module.exports = app;
