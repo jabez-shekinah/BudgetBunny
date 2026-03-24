@@ -1,6 +1,8 @@
-#  Daily Expense & Budget Tracker
+# BudgetBunny: Daily Expense & Budget Tracker
 
-> A robust, full-stack web application for tracking personal finances. Originally a static site, this project has evolved into a dynamic **MERN Stack** (MongoDB, Express, Node.js) application featuring secure user authentication, cloud data persistence, and real-time analytics.
+> A robust, full-stack web application for tracking personal finances. Originally a static site, this project has evolved into a dynamic **MERN Stack** (MongoDB, Express, Node.js) application featuring secure user authentication, cloud data persistence, real-time analytics, and automated testing.
+
+**Live Demo:** [https://budgetbunny-43ju.onrender.com](https://budgetbunny-43ju.onrender.com)
 
 ---
 
@@ -12,6 +14,7 @@
 - [Project Structure](#project-structure)
 - [UI Guide](#ui-guide)
 - [Architecture & Code Structure](#architecture--code-structure)
+- [Automated Testing](#automated-testing)
 - [Functions (Developer Reference)](#functions-developer-reference)
 - [Installation & Setup](#installation--setup)
 - [API Documentation](#api-documentation)
@@ -22,12 +25,13 @@
 
 ## Overview
 
-**BudgetBunny** solves the limitation of device-restricted storage by moving from localStorage to a secure cloud database, allowing you to access your data from any device. 
+**BudgetBunny** solves the limitation of device-restricted storage by moving from `localStorage` to a secure cloud database, allowing you to access your data from any device.
 
 It allows users to:
 
 - **Register & Login** securely to access private data from any device.
 - **Track Expenses** with cloud persistence (MongoDB Atlas).
+- **Attach Receipts** by uploading images directly to Firebase Storage.
 - **Visualize Spending** via interactive charts.
 - **Migrate Data** using a smart Bulk Import tool that uploads local JSON files to the cloud.
 
@@ -35,36 +39,49 @@ It allows users to:
 
 ## Key Features
 
-### Security & Authentication
-- **Google OAuth 2.0:** Secure, passwordless login using Passport.js and Google Identity Services.
-- **Role-Based Access Control (RBAC):** Middleware protecting API routes, with user and admin roles established in the database.
-- **API Security:** Hardened HTTP headers using Helmet.js and server-side input sanitization via `express-validator`.
-- **Centralized Error Handling:** Prevents server crashes and hides sensitive stack traces from the client.
+### Cloud Infrastructure
 
-### Cloud Storage & Database
-- **MongoDB Atlas:** All financial records are stored in a scalable NoSQL cloud database.
-- **Firebase Storage Integration:** Users can securely upload and attach receipt images (`.png`, `.jpg`) to their transactions.
-- **Smart Cloud Cleanup:** Auto-deletion logic ensures old or orphaned receipt images are automatically purged from the Firebase bucket when an expense is updated or deleted.
+- **MongoDB Atlas:** All financial records are stored in a scalable, cloud-based NoSQL database — replacing the previous `localStorage` approach and enabling access from any device.
+- **Firebase Storage:** A dedicated cloud bucket hosts and serves receipt images (`.jpg`, `.png`) attached to transactions.
+- **Smart Cloud Cleanup:** Auto-deletion logic purges old or orphaned receipt images from the Firebase bucket whenever an expense is updated or deleted, preventing digital clutter.
+
+### Security & Authentication
+
+- **Google OAuth 2.0:** Secure, passwordless "Sign in with Google" using Passport.js and Google Identity Services — no extra passwords for users to manage.
+- **Role-Based Access Control (RBAC):** Middleware that identifies whether a user is a standard `User` or an `Admin`, protecting specific routes from unauthorized access.
+- **API Security:** Hardened HTTP headers using **Helmet.js** and server-side input sanitization via **express-validator**.
+- **Centralized Error Handling:** Prevents server crashes and hides sensitive stack traces from the client in production.
+
+### Automated Quality Assurance
+
+- **Unit Testing (Jest):** Tests that validate Mongoose models (`User` and `Expense`) to ensure they never accept malformed or missing data.
+- **Integration Testing (Supertest):** Tests that simulate unauthorized requests to verify all protected routes correctly block access (401/403) and return correct security headers.
 
 ### Dashboard & Analytics
-- **Dynamic Charts:** Real-time updates using Chart.js.
+
+- **Dynamic Charts:** Real-time updates using **Chart.js**.
 - **Global Search:** Filter transactions by date, category, or amount.
-- **Dark Mode:** Persisted theme preferences.
+- **Dark Mode:** Persisted theme preferences across sessions.
+
+### Advanced Logic
+
+- **Bulk JSON Importer:** A migration tool that reads a local `localStorage` JSON export and bulk-uploads all records to the cloud database in one operation.
 
 ---
 
-##  Tech Stack
+## Tech Stack
 
-| Component | Technology | Description |
-|-----------|------------|-------------|
-| **Frontend** | Vanilla JS (ES6) | Modular, lightweight client logic |
-| **Styling** | Tailwind CSS | Utility-first responsive design |
-| **Backend** | Node.js + Express | RESTful API server |
-| **Database** | MongoDB + Mongoose | NoSQL schema-based data storage |
-| **Cloud Storage**| Firebase Admin SDK| Secure cloud bucket for receipt image hosting |
-| **Authentication**| Passport.js (Google)| OAuth 2.0 session management |
-| **Security** | Helmet & Express-Validator| HTTP header protection and input sanitization |
-| **Visualization**| Chart.js | Interactive data rendering |
+| Component          | Technology                 | Description                          |
+| ------------------ | -------------------------- | ------------------------------------ |
+| **Frontend**       | Vanilla JS (ES6)           | Modular, lightweight client logic    |
+| **Styling**        | Tailwind CSS               | Utility-first responsive design      |
+| **Backend**        | Node.js + Express          | RESTful API server                   |
+| **Database**       | MongoDB + Mongoose         | NoSQL schema-based data storage      |
+| **Cloud Storage**  | Firebase Admin SDK         | Secure receipt image hosting         |
+| **Authentication** | Passport.js                | OAuth 2.0 session management         |
+| **Security**       | Helmet & Express-Validator | Header protection and sanitization   |
+| **Visualization**  | Chart.js                   | Interactive data rendering           |
+| **Testing**        | Jest & Supertest           | Automated unit & integration testing |
 
 ---
 
@@ -73,28 +90,30 @@ It allows users to:
 ```plaintext
 BudgetBunny/
 ├─ models/
-│  ├─ User.js          # Mongoose Schema (Includes Google OAuth ID & RBAC roles)
-│  └─ Expense.js       # Mongoose Schema (Includes Firebase receipt URLs)
+│  ├─ User.js          # Mongoose Schema (Includes OAuth & RBAC roles)
+│  └─ Expense.js       # Mongoose Schema (Includes Firebase URLs)
 ├─ public/             # Client-Side Code
 │  ├─ js/
-│  │  ├─ main.js       # App entry point & initialization
-│  │  ├─ storage.js    # API Bridge (Fetch calls for Auth, CRUD, & File Uploads)
-│  │  ├─ ui.js         # DOM updates and UI rendering
-│  │  └─ modals.js     # Handles form submissions and receipt attachments
-│  ├─ styles/
-│  └─ index.html       # Main application interface
-├─ .env                # Environment Secrets (MONGO_URI, Google Keys, Session Secret)
-├─ .gitignore          # Security file (Ignores .env and firebase-key.json)
-├─ firebase-key.json   # Firebase Admin SDK service account key (NOT COMMITTED)
-├─ server.js           # Express Server, Middleware, Auth, & Protected API Routes
-├─ package.json        # Dependencies (Passport, Multer, Helmet, Firebase-Admin)
+│  │  ├─ main.js       # App entry point
+│  │  ├─ storage.js    # API Bridge (Fetch calls)
+│  │  ├─ state.js      # Client-side state management
+│  │  ├─ ui.js         # DOM updates
+│  │  ├─ modals.js     # Form/Modal handling
+│  │  └─ charts.js     # Chart.js configurations
+│  └─ index.html       # Main interface
+├─ tests/              # Automated Testing Suite
+│  ├─ models.test.js   # Unit tests for data validation
+│  └─ expense.test.js  # Integration/Security tests
+├─ .env                # Environment Secrets (IGNORED)
+├─ firebase-key.json   # Firebase Admin Key (NOT COMMITTED)
+├─ server.js           # Express Server & API Routes
+├─ package.json        # Dependencies & Scripts
 └─ README.md           # Project Documentation
 ```
 
-
 ---
 
-##  UI Guide
+## UI Guide
 
 | Section                    | Description                                                    |
 | -------------------------- | -------------------------------------------------------------- |
@@ -109,149 +128,156 @@ BudgetBunny/
 
 ## Architecture & Code Structure
 
-The project uses a **MVC (Model-View-Controller)** adapted pattern. The Backend (Node/Express) handles data logic, while the Frontend (Vanilla JS) handles the UI.
+The project follows an **MVC (Model-View-Controller)** adapted pattern. The backend (Node/Express) handles data and business logic, while the frontend (Vanilla JS) handles the UI.
 
-| File Location           | Purpose |
-| :---                    | :--- |
-| **Backend** | |
-| `server.js`             | Express server entry point. Handles API routes, DB connection, and serving static files. |
-| `models/User.js`        | Mongoose schema defining the User structure. |
-| `models/Expense.js`     | Mongoose schema defining the Expense structure. |
-| **Frontend** | |
-| `public/js/main.js`     | App entry point. Handles `async` initialization and global event listeners. |
-| `public/js/storage.js`  | **API Bridge.** Contains `fetch` calls to talk to the backend (GET, POST, DELETE). |
-| `public/js/state.js`    | Manages temporary client-side state (filtered lists, current view). |
-| `public/js/ui.js`       | pure UI logic. Updates the DOM and handles notifications. |
-| `public/js/modals.js`   | Manages form submissions and modal visibility. |
-| `public/js/charts.js`   | Configures and updates Chart.js visualizations. |
+| File Location          | Purpose                                                                             |
+| :--------------------- | :---------------------------------------------------------------------------------- |
+| **Backend**            |                                                                                     |
+| `server.js`            | Express server entry point. Handles API routes, DB connection, and Auth.            |
+| `models/User.js`       | Mongoose schema defining the User structure, including OAuth fields and RBAC roles. |
+| `models/Expense.js`    | Mongoose schema defining the Expense structure, including Firebase receipt URLs.    |
+| `tests/`               | Contains all Jest and Supertest test files.                                         |
+| **Frontend**           |                                                                                     |
+| `public/js/main.js`    | App entry point. Handles `async` initialization and global event listeners.         |
+| `public/js/storage.js` | **API Bridge.** Contains `fetch` calls to the backend (GET, POST, PUT, DELETE).     |
+| `public/js/state.js`   | Manages temporary client-side state (filtered lists, current view).                 |
+| `public/js/ui.js`      | Pure UI logic. Updates the DOM and handles notifications.                           |
+| `public/js/modals.js`  | Manages form submissions and modal visibility.                                      |
+| `public/js/charts.js`  | Configures and updates Chart.js visualizations.                                     |
+
+---
+
+## Automated Testing
+
+BudgetBunny features a dual-layer testing suite to ensure code quality and security.
+
+**Unit Testing (Jest):** Ensures that the `User` and `Expense` models correctly enforce required fields and data types, so no malformed data ever reaches the database.
+
+**Integration Testing (Supertest):** Verifies that protected API routes correctly handle RBAC — blocking unauthorized requests (401/403) and returning the correct security headers.
+
+To run the test suite locally:
+
+```bash
+npm test
+```
 
 ---
 
 ## Functions (Developer Reference)
 
-Key functions used to manage data flow between the Client and the Database.
+Key functions managing data flow between the client and the database.
 
-| Function | Description |
-| :--- | :--- |
-| **Data & API** | |
-| `addExpenseToDB(data)`  | **Async.** Sends a `POST` request to save a new expense to MongoDB. |
-| `deleteExpenseFromDB(id)`| **Async.** Sends a `DELETE` request to remove an expense from the server. |
-| `importDataFromFile(file)`| **Async.** Reads a JSON file and performs a **bulk upload** of expenses to the database. |
-| `loadFromLocalStorage()` | **Async.** Loads the user session and **fetches** live data from the API. |
-| `saveToLocalStorageSafe()`| **Sync.** Now strictly saves *user preferences* (Theme, Budget Goals) locally. |
-| **Visualization** | |
-| `safeRenderAndCharts()` | Wrapper that safely re-draws the dashboard and charts with new data. |
-| `renderApp()`           | Updates the DOM elements (tables, summary cards) based on current state. |
-| `syncThemeToDOM()`      | Applies the Dark/Light mode class to the `<body>`. |
+| Function                   | Description                                                                                    |
+| :------------------------- | :--------------------------------------------------------------------------------------------- |
+| **Data & API**             |                                                                                                |
+| `addExpenseToDB(data)`     | **Async.** Sends a `POST` request to save a new expense to MongoDB.                            |
+| `deleteExpenseFromDB(id)`  | **Async.** Sends a `DELETE` request to remove an expense and trigger Firebase receipt cleanup. |
+| `importDataFromFile(file)` | **Async.** Reads a JSON file and performs a **bulk upload** of expenses to the database.       |
+| `loadFromLocalStorage()`   | **Async.** Loads the user session and **fetches** live data from the API.                      |
+| `saveToLocalStorageSafe()` | **Sync.** Strictly saves _user preferences_ (theme, budget goals) locally.                     |
+| **Visualization**          |                                                                                                |
+| `safeRenderAndCharts()`    | Wrapper that safely re-draws the dashboard and charts with new data.                           |
+| `renderApp()`              | Updates the DOM elements (tables, summary cards) based on current state.                       |
+| `syncThemeToDOM()`         | Applies the Dark/Light mode class to the `<body>`.                                             |
 
 ---
 
 ## Installation & Setup
 
 ### Prerequisites
+
 - Node.js installed.
 - A MongoDB Atlas account.
+- A Firebase project with a Storage bucket and a service account key (`firebase-key.json`).
 
 ### Setup Instructions
 
-1. Clone the Repository
+1. **Clone the Repository**
+
 ```bash
-git clone https://github.com/yourusername/BudgetBunny.git
+git clone https://github.com/polochamps/BudgetBunny.git
 cd BudgetBunny
 ```
 
-2. Install Dependencies
+2. **Install Dependencies**
+
 ```bash
 npm install
 ```
 
-3. Configure Environment
+3. **Configure Environment**
 
 Create a `.env` file in the root directory:
+
 ```env
-MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/testDB?retryWrites=true&w=majority
-PORT=5000
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-SESSION_SECRET=your_random_session_secret
+MONGO_URI=your_mongodb_atlas_uri
+GOOGLE_CLIENT_ID=your_id
+GOOGLE_CLIENT_SECRET=your_secret
+GOOGLE_CALLBACK_URL=your_callback_url
+SESSION_SECRET=your_secret_string
 ```
 
-4. Run the Server
+Place your Firebase service account key at the project root as `firebase-key.json`. **Do not commit this file.**
+
+4. **Run the Server**
+
 ```bash
 npm start
 ```
 
-The server will start on `http://localhost:3000`
-  
+The server will start on `http://localhost:3000`.
+
 ---
 
 ## API Documentation
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| **Authentication (Local)** | | |
-| POST | `/api/register` | Create a new user account with email and password. |
-| POST | `/api/login` | Authenticate user via email/password & start session. |
-| **Authentication (Google OAuth)** | | |
-| GET | `/auth/google` | Initiates the Google OAuth 2.0 login flow. |
-| GET | `/auth/google/callback` | OAuth callback route to establish the user session. |
-| GET | `/auth/current_user` | Returns the currently authenticated user's profile data. |
-| GET | `/auth/logout` | Destroys the session and logs the user out. |
-| **Expenses (Protected Routes)** | | |
-| GET | `/api/expenses/:userId` | Fetch all expenses for a specific user. |
-| POST | `/api/expenses` | Save a new expense and Firebase receipt URL to the database. |
-| PUT | `/api/expenses/:id` | Update an expense and auto-replace cloud receipts. |
-| DELETE | `/api/expenses/:id` | Permanently remove an expense and purge its Firebase receipt. |
+| Method                          | Endpoint                | Description                                                                          |
+| ------------------------------- | ----------------------- | ------------------------------------------------------------------------------------ |
+| **Authentication**              |                         |                                                                                      |
+| GET                             | `/auth/google`          | Initiates the Google OAuth 2.0 login flow.                                           |
+| GET                             | `/auth/google/callback` | OAuth callback route to establish the user session.                                  |
+| GET                             | `/auth/current_user`    | Returns the currently authenticated user's profile data.                             |
+| GET                             | `/auth/logout`          | Destroys the session and logs the user out.                                          |
+| **Expenses (Protected Routes)** |                         |                                                                                      |
+| GET                             | `/api/expenses/:userId` | Fetch all expenses for a specific user.                                              |
+| POST                            | `/api/expenses`         | Save a new expense and upload receipt to Firebase.                                   |
+| PUT                             | `/api/expenses/:id`     | Update an expense. Automatically replaces the old Firebase receipt with the new one. |
+| DELETE                          | `/api/expenses/:id`     | Remove an expense and purge its associated Firebase receipt.                         |
 
 ---
 
 ## How to Use
 
-### 1. Register
-
-Create an account on the login screen.
-
-### 2. Create an account on the login screen.
-
-Once logged in, you will see your empty dashboard.
-
-### 3. Add Expense
-
-Use the sidebar form to add a transaction. It saves instantly to the cloud.
-
-### 4. Export / Import Data
-
-- **Export:** Click **Export Data** to download a JSON backup file named `budgetTracker-YYYY-MM-DD.json`.
-- **Import:** Click **Import Data** to upload it to your new cloud account.
-
-### 5. Analyze
-
-Switch chart views to see monthly or yearly trends.
-
-##  Project Documentation
+1. **Register** — Create an account using email/password or **Sign in with Google**.
+2. **Explore the Dashboard** — Set your monthly budget to get started.
+3. **Add Expense** — Use the sidebar form to log a transaction. Optionally attach a receipt image. Saves instantly to the cloud.
+4. **Export / Import Data**
+   - **Export:** Click **Export Data** to download a JSON backup named `budgetTracker-YYYY-MM-DD.json`.
+   - **Import:** Click **Import Data** to bulk-upload a previous export to your cloud account.
+5. **Analyze** — Switch chart views to see monthly or yearly spending trends by category.
 
 ---
 
-###  Requirements Gathering Document
+## Project Documentation
 
-This document outlines the initial phase of the project, detailing stakeholder requirements, functional and non-functional specifications, and the final approval log for the **Budget Tracker** project.
+### Requirements Gathering Document
 
-<p align="center"><a href="https://docs.google.com/document/d/1etwZgnCslsuRYfLSjMoCElXrALwSjlutLBiek4C9B3A/edit?usp=sharing" target="_blank" style="outline:none;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/document/d/1etwZgnCslsuRYfLSjMoCElXrALwSjlutLBiek4C9B3A/edit?usp=sharing" alt="Requirements Gathering QR Code" width="200" style="border:0;"/></a></p>
+This document outlines the initial phase of the project, detailing stakeholder requirements, functional and non-functional specifications, and the final approval log.
 
----
-
-###  Wireframe Justification and Design Decisions
-
-This document provides the rationale behind the project's UI/UX design, justifying the wireframe choices based on **Human-Computer Interaction (HCI)** principles, technical feasibility, and user experience goals.
-
-<p align="center"><a href="https://docs.google.com/document/d/1D0Vepv_MbIJjhRpgWafzE2IFRNDJ-oYc3sXP5bd1Wzw/edit?usp=sharing" target="_blank" style="outline:none;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/document/d/1D0Vepv_MbIJjhRpgWafzE2IFRNDJ-oYc3sXP5bd1Wzw/edit?usp=sharing" alt="Wireframe Justification QR Code" width="200" style="border:0;"/></a></p
+<p align="center"><a href="https://docs.google.com/document/d/1etwZgnCslsuRYfLSjMoCElXrALwSjlutLBiek4C9B3A/edit?usp=sharing" target="_blank"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/document/d/1etwZgnCslsuRYfLSjMoCElXrALwSjlutLBiek4C9B3A/edit?usp=sharing" alt="Requirements QR" width="150"/></a></p>
 
 ---
 
-###  Project Plan and Gantt Chart
+### Wireframe Justification and Design Decisions
 
-This spreadsheet contains the complete project timeline, including the phased breakdown of activities, task durations, assigned team members, and overall schedule for the **Budget Tracker** project.
+Rationale behind the project's UI/UX design, justifying wireframe choices based on **HCI** principles, technical feasibility, and user experience goals.
 
-<p align="center"><a href="https://docs.google.com/spreadsheets/d/1bwFmgUFChvp5VOA9_AfjprGblmZr6pWFwGl-YBRpSB8/edit?usp=sharing" target="_blank" style="outline:none;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/spreadsheets/d/1bwFmgUFChvp5VOA9_AfjprGblmZr6pWFwGl-YBRpSB8/edit?usp=sharing" alt="Project Plan QR Code" width="200" style="border:0;"/></a></p>
+<p align="center"><a href="https://docs.google.com/document/d/1D0Vepv_MbIJjhRpgWafzE2IFRNDJ-oYc3sXP5bd1Wzw/edit?usp=sharing" target="_blank"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/document/d/1D0Vepv_MbIJjhRpgWafzE2IFRNDJ-oYc3sXP5bd1Wzw/edit?usp=sharing" alt="Wireframe QR" width="150"/></a></p>
 
-## 
+---
+
+### Project Plan and Gantt Chart
+
+Complete project timeline including phased breakdown of activities, task durations, assigned team members, and overall schedule.
+
+<p align="center"><a href="https://docs.google.com/spreadsheets/d/1bwFmgUFChvp5VOA9_AfjprGblmZr6pWFwGl-YBRpSB8/edit?usp=sharing" target="_blank"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/spreadsheets/d/1bwFmgUFChvp5VOA9_AfjprGblmZr6pWFwGl-YBRpSB8/edit?usp=sharing" alt="Project Plan QR" width="150"/></a></p>
