@@ -56,7 +56,8 @@ app.use(
 // Enable 'CORS' so frontend can talk to backend
 app.use(cors());
 // Parse JSON data (allows us to read data sent in POST requests)
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 // Serve Static Files (CSS, JS, Images) from 'public' folder
 app.use(express.static(path.join(__dirname, "public")));
 
