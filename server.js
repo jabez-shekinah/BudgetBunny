@@ -11,6 +11,7 @@ const session = require("express-session");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { body, validationResult } = require("express-validator");
+const MongoStore = require("connect-mongo");
 
 // 1. Load secret key
 const serviceAccount = require("./firebase-key.json");
@@ -62,9 +63,11 @@ app.use(express.static(path.join(__dirname, "public")));
 // 1. Session Middleware (Required for Passport)
 app.use(
   session({
-    secret: "budgetbunny_secret_key", // You can move this to .env later
-    resave: false,
+    secret: "budgetbunny_secret_key",
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+    }),
   })
 );
 
