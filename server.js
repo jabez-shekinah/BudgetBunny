@@ -65,6 +65,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
     secret: "budgetbunny_secret_key",
+    resave: false,
     saveUninitialized: false,
     //store: MongoStore.create({
     //mongoUrl: process.env.MONGO_URI,
