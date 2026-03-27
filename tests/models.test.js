@@ -47,4 +47,34 @@ describe("Database Model Unit Tests", () => {
     expect(error).not.toBeNull();
     expect(error.errors.amount).toBeDefined(); // amount is required
   });
+
+  // --------------------------------------------------------------------------
+  // Test UT-03: Unit - Negative Amount Schema Limitation
+  // --------------------------------------------------------------------------
+  it("Should allow negative amounts (known limitation - no minimum validation)", async () => {
+    const expense = new Expense({
+      userId: new mongoose.Types.ObjectId(),
+      description: "Refund",
+      amount: -999,
+      category: "misc",
+    });
+
+    let error = null;
+    try {
+      await expense.validate();
+    } catch (err) {
+      error = err;
+    }
+
+    // This passes — documenting that schema has no minimum amount guard
+    expect(error).toBeNull();
+  });
+
+  // --------------------------------------------------------------------------
+  // Test UT-05: Unit - User Schema Email Uniqueness
+  // --------------------------------------------------------------------------
+  it("Should have email marked as unique in the User schema", () => {
+    const emailPath = User.schema.path("email");
+    expect(emailPath.options.unique).toBe(true);
+  });
 });

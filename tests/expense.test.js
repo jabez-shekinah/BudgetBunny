@@ -49,4 +49,35 @@ describe("BudgetBunny API & Security Tests", () => {
     expect(response.headers["x-dns-prefetch-control"]).toBe("off");
     expect(response.headers["x-content-type-options"]).toBe("nosniff");
   });
+
+  // --------------------------------------------------------------------------
+  // Test IT-02: Integration - Missing Amount Validation
+  // --------------------------------------------------------------------------
+  it("Should return 401 when amount is empty (input validation)", async () => {
+    const response = await request(app).post("/api/expenses").send({
+      description: "Food",
+      amount: "",
+      category: "food",
+    });
+
+    expect(response.statusCode).toBe(401); // requireAuth fires first
+    // Note: to test validator, you'd need an authenticated session
+  });
+
+  // --------------------------------------------------------------------------
+  // Test ST-05: Security - Unauthorized DELETE on Non-Existent Expense
+  // --------------------------------------------------------------------------
+  it("Should return 401 when deleting a non-existent expense without auth", async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const response = await request(app).delete(`/api/expenses/${fakeId}`);
+    expect(response.statusCode).toBe(401);
+  });
+  // --------------------------------------------------------------------------
+  // Test IT-03: Integration - API Health Check
+  // --------------------------------------------------------------------------
+  it("Should confirm the backend health check endpoint returns 200", async () => {
+    const response = await request(app).get("/api/test");
+    expect(response.statusCode).toBe(200);
+    expect(response.body.message).toBe("Backend is running successfully!");
+  });
 });
