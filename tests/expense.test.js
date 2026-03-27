@@ -72,6 +72,7 @@ describe("BudgetBunny API & Security Tests", () => {
     const response = await request(app).delete(`/api/expenses/${fakeId}`);
     expect(response.statusCode).toBe(401);
   });
+
   // --------------------------------------------------------------------------
   // Test IT-03: Integration - API Health Check
   // --------------------------------------------------------------------------
@@ -79,5 +80,13 @@ describe("BudgetBunny API & Security Tests", () => {
     const response = await request(app).get("/api/test");
     expect(response.statusCode).toBe(200);
     expect(response.body.message).toBe("Backend is running successfully!");
+  });
+
+  // --------------------------------------------------------------------------
+  // Test ST-06: Security - Unauthenticated Upload Protection
+  // --------------------------------------------------------------------------
+  it("Should block unauthenticated access to /api/upload (ST-06)", async () => {
+    const response = await request(app).post("/api/upload");
+    expect(response.statusCode).toBe(401);
   });
 });

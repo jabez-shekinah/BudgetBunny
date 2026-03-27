@@ -362,7 +362,8 @@ app.delete("/api/expenses/:id", requireAuth, async (req, res) => {
 // --- FIREBASE UPLOAD ROUTE ---
 // -------------------------------------------------------
 
-app.post("/api/upload", upload.single("receipt"), async (req, res) => {
+//  PATCHED: Added requireAuth to protect Firebase uploads!
+app.post("/api/upload", requireAuth, upload.single("receipt"), async (req, res) => {
   try {
     // 1. Check if a file actually made it to the server
     if (!req.file) {
