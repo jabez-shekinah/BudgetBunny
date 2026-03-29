@@ -11,6 +11,7 @@ const session = require("express-session");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { body, validationResult } = require("express-validator");
+// const MongoStore = require("connect-mongo");
 
 // 1. Load secret key
 const serviceAccount = require("./firebase-key.json");
@@ -55,16 +56,20 @@ app.use(
 // Enable 'CORS' so frontend can talk to backend
 app.use(cors());
 // Parse JSON data (allows us to read data sent in POST requests)
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 // Serve Static Files (CSS, JS, Images) from 'public' folder
 app.use(express.static(path.join(__dirname, "public")));
 
 // 1. Session Middleware (Required for Passport)
 app.use(
   session({
-    secret: "budgetbunny_secret_key", // You can move this to .env later
+    secret: "budgetbunny_secret_key",
     resave: false,
     saveUninitialized: false,
+    //store: MongoStore.create({
+    //mongoUrl: process.env.MONGO_URI,
+    //}),
   })
 );
 
@@ -180,25 +185,21 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // Find user by email
     const user = await User.findOne({ email });
-    if (!user) {
+
+    if (!user || user.password !== password) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    // Check password
-    if (user.password !== password) {
-      return res.status(400).json({ error: "Invalid email or password" });
-    }
-
-    res.json({
-      message: "Login successful",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
+    // Fix: Explicitly establishes the Passport session
+    req.logIn(user, (err) => {
+      if (err) {
+        return res.status(500).json({ error: "Login session error" });
+      }
+      res.json({
+        message: "Login successful",
+        user: { id: user._id, name: user.name, email: user.email },
+      });
     });
   } catch (error) {
     console.error("Login Error:", error);
@@ -361,7 +362,8 @@ app.delete("/api/expenses/:id", requireAuth, async (req, res) => {
 // --- FIREBASE UPLOAD ROUTE ---
 // -------------------------------------------------------
 
-app.post("/api/upload", upload.single("receipt"), async (req, res) => {
+//  PATCHED: Added requireAuth to protect Firebase uploads!
+app.post("/api/upload", requireAuth, upload.single("receipt"), async (req, res) => {
   try {
     // 1. Check if a file actually made it to the server
     if (!req.file) {
@@ -457,10 +459,6 @@ app.get(
 );
 
 // -------------------------------------------------------
-// START SERVER
-// -------------------------------------------------------
-const PORT = process.env.PORT || 3000;
-// -------------------------------------------------------
 // CENTRALIZED ERROR HANDLING MIDDLEWARE
 // -------------------------------------------------------
 // Catch-all for any unhandled errors in the app
@@ -478,6 +476,18 @@ app.use((err, req, res, next) => {
     stack: process.env.NODE_ENV === "development" ? err.stack : {},
   });
 });
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+
+// -------------------------------------------------------
+// START SERVER (Modified for Jest Testing)
+// -------------------------------------------------------
+const PORT = process.env.PORT || 3000;
+
+// Only bind to the port if we are NOT running an automated test
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+  });
+}
+
+// Export the app so Jest and Supertest can use it
+module.exports = app;

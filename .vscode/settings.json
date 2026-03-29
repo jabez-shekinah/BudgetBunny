@@ -1,6 +1,7 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
   "eslint.validate": ["javascript"],
   "livePreview.defaultPreviewPath": "/views/index.html",
   "eslint.options": {
